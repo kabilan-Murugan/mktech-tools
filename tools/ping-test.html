@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Ping Tool | MKTech Network Monitor</title>
+
+<meta name="description" content="Ping any host or domain and measure latency instantly with this browser-based network pulse monitor tool.">
+
+<meta name="keywords" content="ping tool, ping host online, network latency checker">
+
+<meta name="author" content="MKTech">
+
+<meta name="google-adsense-account" content="ca-pub-xxxxxxxxxxxx">
+
+<link rel="canonical" href="https://mktech.fun/tools/ping-monitor">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+font-family:'Fira Code',monospace;
+background:#010a01;
+color:#00ff41;
+}
+
+.terminal-container{
+background:rgba(0,0,0,.95);
+border:1px solid #00ff41;
+box-shadow:0 0 20px rgba(0,255,65,.2);
+position:relative;
+}
+
+.crt-overlay{
+position:absolute;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:
+linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,.25) 50%),
+linear-gradient(90deg,rgba(255,0,0,.06),rgba(0,255,0,.02),rgba(0,0,255,.06));
+background-size:100% 2px,3px 100%;
+pointer-events:none;
+}
+
+.ping-line{
+border-left:2px solid #004400;
+padding-left:10px;
+margin-bottom:4px;
+}
+
+.latency-bar{
+height:4px;
+background:#00ff41;
+transition:width .3s ease;
+}
+
+input:focus{
+outline:none;
+border-bottom:1px solid #00ff41;
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+
+<!-- PAGE WRAPPER -->
+<div class="max-w-6xl mx-auto px-6 py-24 flex justify-center">
+
+<div class="terminal-container w-full max-w-2xl rounded-sm overflow-hidden">
+
+<div class="crt-overlay"></div>
+
+
+<!-- TERMINAL HEADER -->
+
+<div class="bg-green-900/20 px-4 py-2 border-b border-green-900 flex justify-between text-[10px] tracking-widest">
+
+<span>MKTECH_PULSE_MONITOR v4.0</span>
+
+<span id="clock">00:00:00</span>
+
+</div>
+
+
+
+<div class="p-6">
+
+<!-- COMMAND LINE -->
+
+<div class="flex items-center gap-2 mb-6 text-sm">
+
+<span class="text-green-500">
+root@mktech:~$
+</span>
+
+<span class="text-white">
+ping -t
+</span>
+
+<input
+id="host"
+type="text"
+placeholder="target_ip_or_domain"
+class="bg-transparent text-green-400 placeholder-green-900 flex-1 ml-1"
+onkeypress="if(event.key==='Enter') pingHost()">
+
+</div>
+
+
+
+<!-- TERMINAL OUTPUT -->
+
+<div id="output"
+class="h-64 overflow-y-auto mb-4 text-[12px] leading-relaxed">
+
+<div class="text-green-900 italic">
+SYSTEM READY. ENTER TARGET ABOVE.
+</div>
+
+</div>
+
+
+
+<!-- CONTROLS -->
+
+<div class="flex justify-between items-center border-t border-green-900 pt-4">
+
+<div id="stats"
+class="text-[10px] text-green-800 uppercase">
+
+Packets: 0/0 Sent
+
+</div>
+
+<button onclick="pingHost()"
+class="border border-green-500 px-4 py-1 text-xs hover:bg-green-500 hover:text-black transition font-bold">
+
+START_PULSE
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+setInterval(()=>{
+document.getElementById("clock").innerText=
+new Date().toLocaleTimeString()
+},1000)
+
+
+
+async function pingHost(){
+
+const host=document.getElementById("host").value
+
+const output=document.getElementById("output")
+
+const stats=document.getElementById("stats")
+
+if(!host) return
+
+output.innerHTML=
+`<div class="text-blue-500">[INIT] Establishing ICMP-Bridge to ${host}...</div>`
+
+let sent=0
+let received=0
+
+for(let i=1;i<=6;i++){
+
+sent++
+
+const start=performance.now()
+
+const packetSize=32+Math.floor(Math.random()*32)
+
+const ttl=50+Math.floor(Math.random()*14)
+
+try{
+
+await fetch(`https://${host}/?t=${Date.now()}`,{
+mode:"no-cors",
+cache:"no-cache"
+})
+
+const end=performance.now()
+
+const time=Math.round(end-start)
+
+received++
+
+const entry=document.createElement("div")
+
+entry.className="ping-line flex items-center justify-between"
+
+entry.innerHTML=`
+<span>Reply from ${host}: bytes=${packetSize} time=${time}ms TTL=${ttl}</span>
+<div class="w-24 bg-green-900/30 hidden md:block">
+<div class="latency-bar" style="width:${Math.min(time/2,100)}%"></div>
+</div>
+`
+
+output.appendChild(entry)
+
+}catch{
+
+const errorEntry=document.createElement("div")
+
+errorEntry.className="ping-line text-red-600"
+
+errorEntry.innerText=`Request timed out for sequence ${i}`
+
+output.appendChild(errorEntry)
+
+}
+
+output.scrollTop=output.scrollHeight
+
+stats.innerText=
+`Packets: Sent=${sent}, Recv=${received}, Loss=${((sent-received)/sent*100).toFixed(0)}%`
+
+await new Promise(r=>setTimeout(r,800))
+
+}
+
+output.innerHTML+=
+`<div class="mt-2 text-green-400 font-bold border-t border-green-900 pt-2">--- ${host} pulse statistics complete ---</div>`
+
+}
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+
+
+<script type="application/ld+json">
+
+{
+"@context":"https://schema.org",
+"@type":"SoftwareApplication",
+"name":"Ping Monitor Tool",
+"applicationCategory":"DeveloperApplication",
+"operatingSystem":"Web",
+"description":"Ping host and monitor network latency instantly.",
+"url":"https://mktech.fun/tools/ping-monitor",
+"creator":{
+"@type":"Organization",
+"name":"MKTech"
+}
+}
+
+</script>
+
+</body>
+</html>

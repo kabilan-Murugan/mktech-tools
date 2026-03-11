@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Port Scanner | MKTech Network Tools</title>
+
+<meta name="description" content="Scan open ports on any host using the MKTech browser-based port scanner.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+font-family:'Fira Code',monospace;
+background:#050505;
+color:#00ff41;
+}
+
+.terminal-border{
+border:1px solid #004400;
+box-shadow:0 0 20px rgba(0,255,65,.1);
+}
+
+.btn-port{
+background:#0a1a0a;
+border:1px solid #004400;
+font-size:10px;
+transition:.2s;
+}
+
+.btn-port:hover{
+background:#00ff41;
+color:black;
+}
+
+#history-log::-webkit-scrollbar{
+width:4px;
+}
+
+#history-log::-webkit-scrollbar-thumb{
+background:#004400;
+}
+
+.blink{
+animation:blinker 1s linear infinite;
+}
+
+@keyframes blinker{
+50%{opacity:0}
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+<!-- PAGE WRAPPER -->
+<div class="max-w-6xl mx-auto px-6 py-24 flex justify-center">
+
+<div class="bg-black/95 terminal-border rounded-lg p-6 w-full max-w-2xl">
+
+
+<!-- TOOL HEADER -->
+
+<div class="flex justify-between items-center mb-6 border-b border-green-900 pb-2">
+
+<h1 class="text-sm font-bold tracking-tighter">
+> MKTech_v2.0_ELITE_SCANNER
+</h1>
+
+<div class="flex items-center gap-2">
+<span class="text-[10px] text-green-900">LINK:</span>
+
+<div id="status-light"
+class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_5px_#00ff41]">
+</div>
+
+</div>
+</div>
+
+
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+<!-- CONTROLS -->
+
+<div class="space-y-4">
+
+<div>
+<label class="text-[10px] uppercase text-green-800">
+Target Host
+</label>
+
+<input id="host"
+type="text"
+placeholder="google.com"
+class="w-full bg-[#0a0a0a] border border-green-900 p-2 text-sm focus:outline-none focus:border-green-400">
+</div>
+
+
+
+<div>
+
+<label class="text-[10px] uppercase text-green-800">
+Target Port
+</label>
+
+<div class="flex gap-2 mb-2">
+
+<button onclick="setPort(80)" class="btn-port px-2 py-1">80</button>
+
+<button onclick="setPort(443)" class="btn-port px-2 py-1">443</button>
+
+<button onclick="setPort(22)" class="btn-port px-2 py-1">22</button>
+
+<button onclick="setPort(3389)" class="btn-port px-2 py-1">3389</button>
+
+</div>
+
+<input id="port"
+type="number"
+placeholder="80"
+class="w-full bg-[#0a0a0a] border border-green-900 p-2 text-sm focus:outline-none focus:border-green-400">
+
+</div>
+
+
+
+<button onclick="checkPort()"
+class="w-full bg-green-600 hover:bg-green-400 text-black font-bold py-3 text-xs uppercase tracking-widest transition">
+
+Initiate Sequence
+
+</button>
+
+</div>
+
+
+
+<!-- TERMINAL OUTPUT -->
+
+<div class="flex flex-col">
+
+<label class="text-[10px] uppercase text-green-800 mb-1">
+System Buffer
+</label>
+
+<div id="history-log"
+class="bg-[#050505] border border-green-900 p-3 h-48 overflow-y-auto text-[11px] leading-relaxed">
+
+<div class="text-green-900 italic">
+ // System initialized...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+function setPort(p){
+document.getElementById("port").value=p
+}
+
+
+
+async function checkPort(){
+
+const host=document.getElementById("host").value
+const port=document.getElementById("port").value
+const log=document.getElementById("history-log")
+const light=document.getElementById("status-light")
+
+if(!host||!port) return
+
+light.classList.add("blink")
+light.style.backgroundColor="#ffc107"
+
+const entry=document.createElement("div")
+
+entry.className="mb-2 border-l-2 border-green-900 pl-2"
+
+entry.innerHTML=
+`<span class="text-gray-500">[${new Date().toLocaleTimeString()}]</span> Scanning ${host}:${port}...`
+
+log.prepend(entry)
+
+try{
+
+const url=`https://api.allorigins.win/get?url=${encodeURIComponent(`https://api.portchecker.io/v1/?host=${host}&port=${port}`)}`
+
+const response=await fetch(url)
+
+const wrapper=await response.json()
+
+const data=JSON.parse(wrapper.contents)
+
+if(data.open||data.status==="open"){
+
+entry.innerHTML+=`<br><span class="text-green-400 font-bold"> >> SUCCESS: PORT OPEN</span>`
+
+light.style.backgroundColor="#00ff41"
+
+}else{
+
+entry.innerHTML+=`<br><span class="text-red-500 font-bold"> >> REFUSED: PORT CLOSED</span>`
+
+light.style.backgroundColor="#ff0000"
+
+}
+
+}catch{
+
+entry.innerHTML+=`<br><span class="text-red-600 font-bold"> >> ERROR: API_UNREACHABLE</span>`
+
+light.style.backgroundColor="#ff0000"
+
+}
+
+light.classList.remove("blink")
+
+}
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+</body>
+</html>

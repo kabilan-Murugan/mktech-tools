@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Subdomain Finder | MKTech Tools</title>
+
+<meta name="description" content="Discover subdomains for any domain using the MKTech Subdomain Finder reconnaissance tool.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+body{
+background:#0a0a0a;
+color:#00ff9c;
+font-family:'Courier New',monospace;
+}
+
+.cyber-box{
+border:1px solid #ff8c00;
+background:#111;
+box-shadow:0 0 15px rgba(255,140,0,.15);
+}
+
+.cyber-input{
+background:#000;
+border:1px solid #333;
+color:#ff8c00;
+transition:.3s;
+}
+
+.cyber-input:focus{
+border-color:#ff8c00;
+outline:none;
+box-shadow:0 0 8px rgba(255,140,0,.2);
+}
+
+.cyber-btn{
+background:#ff8c00;
+transition:.2s;
+cursor:pointer;
+}
+
+.cyber-btn:hover{
+background:#ffa500;
+transform:translateY(-1px);
+}
+
+.cyber-btn:active{
+transform:translateY(0);
+}
+
+.scan-log{
+font-size:.75rem;
+border-left:2px solid #ff8c00;
+padding-left:10px;
+margin-bottom:15px;
+color:#888;
+}
+
+::-webkit-scrollbar{
+width:5px;
+}
+
+::-webkit-scrollbar-thumb{
+background:#ff8c00;
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+
+<!-- PAGE WRAPPER -->
+<div class="max-w-6xl mx-auto px-6 py-24 flex justify-center">
+
+
+<div class="cyber-box w-full max-w-3xl p-8 rounded-lg">
+
+
+<div class="flex justify-between items-center mb-6">
+
+<h1 class="text-xl font-bold text-orange-400 tracking-tighter">
+>> SUBDOMAIN_ENUMERATION_V4
+</h1>
+
+<span class="text-[10px] bg-orange-950 text-orange-400 px-2 py-1 border border-orange-500">
+RECON_MODE
+</span>
+
+</div>
+
+
+
+<div class="flex gap-2 mb-4">
+
+<input
+id="domain"
+class="cyber-input flex-1 p-3"
+placeholder="TARGET_DOMAIN (e.g. google.com)">
+
+<button onclick="findSubdomains()"
+id="scanBtn"
+class="cyber-btn px-6 py-3 text-black font-black">
+
+START_SCAN
+
+</button>
+
+</div>
+
+
+
+<div id="statusLog" class="scan-log hidden">
+
+[IDLE] WAITING_FOR_INPUT...
+
+</div>
+
+
+
+<div class="relative">
+
+<div class="absolute top-2 right-4 flex gap-3">
+
+<button onclick="copyResults()" class="text-[10px] text-orange-500 hover:text-white uppercase">
+[Copy]
+</button>
+
+<button onclick="downloadResults()" class="text-[10px] text-orange-500 hover:text-white uppercase">
+[Save_TXT]
+</button>
+
+</div>
+
+
+
+<textarea
+id="result"
+readonly
+class="w-full h-80 bg-black/50 border border-orange-900/50 p-6 text-green-500 text-sm leading-relaxed focus:outline-none"
+placeholder="RECONNAISSANCE_DATA_FIELD...">
+
+</textarea>
+
+</div>
+
+
+
+<div class="mt-4 flex justify-between items-center text-[10px] text-orange-900">
+
+<span>ENCRYPTION: AES-256-GCM</span>
+
+<span id="counter">FOUND: 0</span>
+
+<span>SOURCE: HACKERTARGET_RESERVE</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+async function findSubdomains(){
+
+const domain=document.getElementById("domain").value.trim().toLowerCase()
+
+const resultArea=document.getElementById("result")
+
+const log=document.getElementById("statusLog")
+
+const btn=document.getElementById("scanBtn")
+
+const counter=document.getElementById("counter")
+
+if(!domain) return alert("TARGET_REQUIRED")
+
+btn.disabled=true
+btn.innerText="SCANNING..."
+
+log.classList.remove("hidden")
+
+log.innerHTML=`[INFO] INITIALIZING DNS_ENUMERATION FOR: ${domain}<br>[INFO] QUERYING REMOTE_DATABASE...`
+
+resultArea.value=""
+counter.innerText="FOUND: 0"
+
+try{
+
+const url=`https://api.hackertarget.com/hostsearch/?q=${domain}`
+
+const response=await fetch(url)
+
+const data=await response.text()
+
+if(data.includes("error")||data.length<5){
+throw new Error("INVALID_RESPONSE")
+}
+
+const lines=data.split("\n")
+
+const subdomains=lines
+.map(line=>line.split(",")[0])
+.filter(s=>s.length>0)
+
+resultArea.value=subdomains.join("\n")
+
+counter.innerText=`FOUND: ${subdomains.length}`
+
+log.innerHTML+=`<br><span class="text-green-500">[SUCCESS] ENUMERATION_COMPLETE. ${subdomains.length} NODES IDENTIFIED.</span>`
+
+}
+
+catch(err){
+
+resultArea.value=">> FATAL: COULD_NOT_RETRIEVE_DATA\n>> CHECK_DOMAIN_AND_RETRY"
+
+log.innerHTML+=`<br><span class="text-red-500">[ERROR] DATA_INTERRUPT: ${err.message}</span>`
+
+}
+
+finally{
+
+btn.disabled=false
+btn.innerText="START_SCAN"
+
+}
+
+}
+
+
+
+function copyResults(){
+
+const text=document.getElementById("result").value
+
+navigator.clipboard.writeText(text)
+
+alert("Copied to clipboard")
+
+}
+
+
+
+function downloadResults(){
+
+const text=document.getElementById("result").value
+
+const blob=new Blob([text],{type:"text/plain"})
+
+const link=document.createElement("a")
+
+link.href=URL.createObjectURL(blob)
+
+link.download="subdomains_recon.txt"
+
+link.click()
+
+}
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+</body>
+</html>

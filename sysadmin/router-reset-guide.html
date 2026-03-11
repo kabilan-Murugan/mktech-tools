@@ -1,0 +1,312 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MKTech | Router Recovery Pro</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #050505;
+            color: #d1d1d1;
+        }
+
+        .terminal-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .custom-card {
+            background: #111111;
+            border: 1px solid rgba(255, 255, 255, .05);
+            transition: .3s;
+        }
+
+        .custom-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #3b82f6, transparent);
+        }
+
+        .glow-warning {
+            box-shadow: 0 0 20px rgba(245, 158, 11, .1);
+        }
+    </style>
+
+</head>
+
+
+
+<body class="min-h-screen pb-20">
+
+    <!-- GLOBAL HEADER -->
+    <div id="header"></div>
+
+
+
+    <main class="max-w-[1400px] mx-auto px-8 py-12">
+
+        <!-- WARNING -->
+
+        <div
+            class="glow-warning border-l-4 border-amber-500 bg-amber-500/5 p-6 rounded-2xl mb-12 flex items-start gap-5">
+
+            <div class="text-amber-500 text-3xl">⚠️</div>
+
+            <div>
+
+                <h3 class="text-amber-500 font-black uppercase text-sm tracking-widest mb-1">
+                    Critical Notice: Data Wipe
+                </h3>
+
+                <p class="text-sm text-gray-400">
+                    A factory reset will erase all WiFi names, passwords and router configuration.
+                    The router returns to its default state.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- METHOD SECTION -->
+
+            <div class="lg:col-span-2 space-y-8">
+
+                <section class="custom-card rounded-3xl p-8">
+
+                    <div class="flex justify-between items-center mb-8">
+
+                        <h2 class="text-2xl font-black uppercase tracking-tight">
+                            01. Physical Hard Reset
+                        </h2>
+
+                        <span
+                            class="bg-blue-500/10 text-blue-500 text-[10px] font-bold px-3 py-1 rounded-full border border-blue-500/20 uppercase">
+                            No Software Needed
+                        </span>
+
+                    </div>
+
+
+
+                    <div class="grid md:grid-cols-2 gap-10 items-center">
+
+                        <div class="space-y-6">
+
+                            <div class="flex gap-4">
+                                <div
+                                    class="step-number w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white">
+                                    1</div>
+                                <p class="text-sm">Ensure the router is <span class="text-white font-bold">powered
+                                        on</span>.</p>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div
+                                    class="step-number w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white">
+                                    2</div>
+                                <p class="text-sm">Locate the <span
+                                        class="terminal-font text-xs text-white">RESET</span> pinhole.</p>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div
+                                    class="step-number w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white">
+                                    3</div>
+                                <p class="text-sm">Hold reset button for <span class="text-blue-400 font-bold">15
+                                        seconds</span>.</p>
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="bg-black/40 border border-white/5 rounded-2xl p-6 text-center">
+
+                            <div class="text-[10px] text-gray-500 uppercase tracking-widest mb-4">
+                                Rear Panel Diagram
+                            </div>
+
+                            <div
+                                class="w-full h-32 border-2 border-dashed border-gray-800 rounded-xl flex items-center justify-center">
+
+                                <div class="flex gap-2">
+
+                                    <div class="w-8 h-8 bg-gray-800 rounded"></div>
+                                    <div class="w-8 h-8 bg-gray-800 rounded"></div>
+
+                                    <div
+                                        class="w-8 h-8 bg-blue-600/20 border border-blue-600 rounded flex items-center justify-center">
+                                        <div class="w-1 h-1 bg-blue-500 rounded-full"></div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <p class="text-[10px] text-gray-600 mt-4">
+                                Typical Reset Button Location
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <section class="custom-card rounded-3xl p-8">
+
+                    <h2 class="text-2xl font-black uppercase tracking-tight mb-8">
+                        02. Software Soft Reset
+                    </h2>
+
+                    <div class="bg-black/60 rounded-2xl p-6 mb-6">
+
+                        <label class="text-[9px] font-black text-blue-500 uppercase tracking-widest block mb-3">
+                            Target Access Gateways
+                        </label>
+
+                        <div class="flex flex-wrap gap-4">
+
+                            <code class="terminal-font text-sm bg-white/5 px-4 py-2 rounded-lg border border-white/10">
+http://192.168.0.1
+</code>
+
+                            <code class="terminal-font text-sm bg-white/5 px-4 py-2 rounded-lg border border-white/10">
+http://192.168.1.1
+</code>
+
+                        </div>
+
+                    </div>
+
+                    <p class="text-sm text-gray-400">
+                        Login and navigate to
+                        <span class="text-white font-bold">
+                            Advanced Settings → System Tools → Factory Defaults
+                        </span>
+                    </p>
+
+                </section>
+
+            </div>
+
+
+
+            <!-- SIDEBAR -->
+
+            <aside class="space-y-8">
+
+                <div class="custom-card rounded-3xl p-8 border-l-4 border-blue-600">
+
+                    <h3 class="text-lg font-black uppercase mb-6">
+                        Credential Vault
+                    </h3>
+
+
+
+                    <div class="space-y-4">
+
+                        <div class="p-4 bg-white/5 rounded-2xl">
+
+                            <p class="text-[10px] font-bold text-gray-500 uppercase mb-2">
+                                TP-LINK / ASUS
+                            </p>
+
+                            <div class="flex justify-between terminal-font text-xs">
+                                <span>User: admin</span>
+                                <span class="text-blue-400">Pass: admin</span>
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="p-4 bg-white/5 rounded-2xl">
+
+                            <p class="text-[10px] font-bold text-gray-500 uppercase mb-2">
+                                NETGEAR
+                            </p>
+
+                            <div class="flex justify-between terminal-font text-xs">
+                                <span>User: admin</span>
+                                <span class="text-blue-400">Pass: password</span>
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="p-4 bg-white/5 rounded-2xl">
+
+                            <p class="text-[10px] font-bold text-gray-500 uppercase mb-2">
+                                LINKSYS
+                            </p>
+
+                            <div class="flex justify-between terminal-font text-xs">
+                                <span>User: admin</span>
+                                <span class="text-blue-400">Pass: (blank)</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-3xl p-8 text-white shadow-2xl">
+
+                    <h3 class="font-black uppercase text-sm mb-4">
+                        Post-Reset Checklist
+                    </h3>
+
+                    <ul class="text-xs space-y-3">
+
+                        <li>✅ Change default password</li>
+                        <li>✅ Set WiFi SSID</li>
+                        <li>✅ Update firmware</li>
+                        <li>✅ Configure port forwarding</li>
+
+                    </ul>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+
+
+    <script src="/js/include.js"></script>
+
+    <script>
+        loadComponent("header", "/components/header.html");
+    </script>
+
+</body>
+
+</html>
+```

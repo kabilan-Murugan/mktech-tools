@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Windows CMD & PowerShell Commands | MKTech Terminal Docs</title>
+
+<meta name="description" content="Complete Windows CMD and PowerShell command reference for system administrators including syntax, examples and use cases.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+font-family:'Plus Jakarta Sans',sans-serif;
+transition:all .3s;
+}
+
+.terminal-font{
+font-family:'Fira Code',monospace;
+}
+
+/* THEMES */
+
+.theme-cmd{
+--bg:#050505;
+--card:#121212;
+--text:#e0e0e0;
+--accent:#3b82f6;
+--header:#000;
+--dim:#666;
+}
+
+.theme-ps{
+--bg:#011627;
+--card:#0b253a;
+--text:#ffffff;
+--accent:#10b981;
+--header:#010d18;
+--dim:#8892b0;
+}
+
+.custom-theme{
+background:var(--bg);
+color:var(--text);
+}
+
+.custom-card{
+background:var(--card);
+border:1px solid rgba(255,255,255,.05);
+}
+
+.category-pill{
+background:linear-gradient(90deg,var(--accent),transparent);
+}
+
+</style>
+
+</head>
+
+
+
+<body class="theme-cmd custom-theme min-h-screen">
+
+
+
+<!-- GLOBAL HEADER -->
+<div id="header"></div>
+
+
+
+<!-- TERMINAL TOOL HEADER -->
+
+<header class="sticky top-0 z-40 bg-black/60 backdrop-blur-xl border-b border-white/5 shadow-2xl">
+
+<div class="max-w-[1600px] mx-auto px-8 py-6 flex flex-wrap justify-between items-center gap-6">
+
+<div class="flex items-center gap-4">
+
+<div class="bg-blue-600 px-3 py-1 rounded font-black text-white text-2xl">
+MK
+</div>
+
+<div>
+<h1 class="text-xl font-extrabold tracking-tighter uppercase">
+Terminal <span class="text-blue-500">Pro</span>
+</h1>
+
+<span class="text-[10px] text-gray-500 font-bold tracking-[0.2em]">
+SYSTEM ADMINISTRATION v2.0
+</span>
+</div>
+
+</div>
+
+
+
+<!-- MODE SWITCH -->
+
+<div class="flex items-center bg-white/5 p-1.5 rounded-2xl border border-white/10">
+
+<button onclick="switchMode('cmd')" id="btn-cmd"
+class="px-8 py-2.5 rounded-xl text-xs font-black transition-all bg-blue-600 text-white shadow-lg">
+
+CMD.EXE
+
+</button>
+
+<button onclick="switchMode('ps')" id="btn-ps"
+class="px-8 py-2.5 rounded-xl text-xs font-black transition-all text-white/40 hover:text-white">
+
+POWERSHELL
+
+</button>
+
+</div>
+
+
+
+<!-- SEARCH -->
+
+<div class="relative w-full md:w-96">
+
+<input
+type="text"
+id="search"
+placeholder="Search commands, syntax, or keywords..."
+class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+
+</div>
+
+</div>
+
+</header>
+
+
+
+<!-- PAGE CONTENT -->
+
+<main id="main-content"
+class="max-w-[1600px] mx-auto px-8 py-16">
+
+</main>
+
+
+
+<script>
+
+const commandData = [
+
+// FILE & DIRECTORY
+            { type: "cmd", cat: "📁 File & Directory", cmd: "dir", desc: "List files and folders in the current directory.", syn: "dir [drive:][path][filename] [/o:sortorder]", ex: "dir /o:d" },
+            { type: "cmd", cat: "📁 File & Directory", cmd: "cd", desc: "Change the current directory.", syn: "cd [path]", ex: "cd C:\\Users" },
+            { type: "cmd", cat: "📁 File & Directory", cmd: "mkdir", desc: "Create a new directory.", syn: "mkdir [directory]", ex: "mkdir BackupData" },
+            { type: "cmd", cat: "📁 File & Directory", cmd: "rmdir", desc: "Remove a directory.", syn: "rmdir [directory] [/s]", ex: "rmdir TestFolder /s" },
+            { type: "cmd", cat: "📁 File & Directory", cmd: "copy", desc: "Copy files from one location to another.", syn: "copy [source] [destination]", ex: "copy file.txt D:\\Backup" },
+            { type: "cmd", cat: "📁 File & Directory", cmd: "move", desc: "Move files from one directory to another.", syn: "move [source] [destination]", ex: "move report.txt D:\\Docs" },
+            { type: "cmd", cat: "📁 File & Directory", cmd: "del", desc: "Delete one or more files.", syn: "del [filename]", ex: "del temp.txt" },
+            { type: "cmd", cat: "📁 File & Directory", cmd: "ren", desc: "Rename a file or directory.", syn: "ren [oldname] [newname]", ex: "ren file.txt report.txt" },
+            { type: "cmd", cat: "📁 File & Directory", cmd: "tree", desc: "Displays folder structure graphically.", syn: "tree [drive:][path]", ex: "tree C:\\" },
+            { type: "cmd", cat: "📁 File & Directory", cmd: "attrib", desc: "Display or change file attributes.", syn: "attrib [+r|-r] [+h|-h] [filename]", ex: "attrib +h secret.txt" },
+
+            // SYSTEM INFORMATION
+            { type: "cmd", cat: "⚙️ System Information", cmd: "systeminfo", desc: "Displays detailed system configuration.", syn: "systeminfo", ex: "systeminfo" },
+            { type: "cmd", cat: "⚙️ System Information", cmd: "hostname", desc: "Shows the computer name.", syn: "hostname", ex: "hostname" },
+            { type: "cmd", cat: "⚙️ System Information", cmd: "ver", desc: "Displays Windows version.", syn: "ver", ex: "ver" },
+            { type: "cmd", cat: "⚙️ System Information", cmd: "whoami", desc: "Displays current logged in user.", syn: "whoami", ex: "whoami" },
+            { type: "cmd", cat: "⚙️ System Information", cmd: "driverquery", desc: "Displays installed device drivers.", syn: "driverquery", ex: "driverquery /v" },
+            { type: "cmd", cat: "⚙️ System Information", cmd: "tasklist", desc: "Displays running processes.", syn: "tasklist", ex: "tasklist" },
+            { type: "cmd", cat: "⚙️ System Information", cmd: "taskkill", desc: "Terminate a running process.", syn: "taskkill /im [processname] /f", ex: "taskkill /im notepad.exe /f" },
+
+            // NETWORK COMMANDS
+            { type: "cmd", cat: "🌐 Network Commands", cmd: "ipconfig", desc: "Displays IP configuration.", syn: "ipconfig [/all]", ex: "ipconfig /all" },
+            { type: "cmd", cat: "🌐 Network Commands", cmd: "ipconfig /release", desc: "Release current IP address.", syn: "ipconfig /release", ex: "ipconfig /release" },
+            { type: "cmd", cat: "🌐 Network Commands", cmd: "ipconfig /renew", desc: "Renew IP address.", syn: "ipconfig /renew", ex: "ipconfig /renew" },
+            { type: "cmd", cat: "🌐 Network Commands", cmd: "ipconfig /flushdns", desc: "Clears the DNS Resolver cache.", syn: "ipconfig /flushdns", ex: "ipconfig /flushdns" },
+            { type: "cmd", cat: "🌐 Network Commands", cmd: "ping", desc: "Test connectivity with another host.", syn: "ping [hostname]", ex: "ping google.com" },
+            { type: "cmd", cat: "🌐 Network Commands", cmd: "tracert", desc: "Trace route to destination.", syn: "tracert [hostname]", ex: "tracert google.com" },
+            { type: "cmd", cat: "🌐 Network Commands", cmd: "netstat", desc: "Displays active network connections.", syn: "netstat [-a]", ex: "netstat -an" },
+            { type: "cmd", cat: "🌐 Network Commands", cmd: "nslookup", desc: "Query DNS servers.", syn: "nslookup [domain]", ex: "nslookup google.com" },
+            { type: "cmd", cat: "🌐 Network Commands", cmd: "arp -a", desc: "Displays ARP cache.", syn: "arp -a", ex: "arp -a" },
+            { type: "cmd", cat: "🌐 Network Commands", cmd: "getmac", desc: "Displays MAC address.", syn: "getmac", ex: "getmac /v" },
+
+            // USER MANAGEMENT
+            { type: "cmd", cat: "👤 User Management", cmd: "net user", desc: "Displays user accounts.", syn: "net user", ex: "net user" },
+            { type: "cmd", cat: "👤 User Management", cmd: "net user add", desc: "Create a new user.", syn: "net user [username] [password] /add", ex: "net user admin123 pass@123 /add" },
+            { type: "cmd", cat: "👤 User Management", cmd: "net user delete", desc: "Delete a user account.", syn: "net user [username] /delete", ex: "net user admin123 /delete" },
+            { type: "cmd", cat: "👤 User Management", cmd: "net localgroup", desc: "Displays local groups.", syn: "net localgroup", ex: "net localgroup administrators" },
+
+            // DISK & STORAGE
+            { type: "cmd", cat: "💾 Disk & Storage", cmd: "chkdsk", desc: "Check disk for errors and repair.", syn: "chkdsk [drive:] /f /r", ex: "chkdsk C: /f" },
+            { type: "cmd", cat: "💾 Disk & Storage", cmd: "diskpart", desc: "Disk partition management tool.", syn: "diskpart", ex: "diskpart" },
+            { type: "cmd", cat: "💾 Disk & Storage", cmd: "format", desc: "Formats a disk.", syn: "format [drive:]", ex: "format D:" },
+            { type: "cmd", cat: "💾 Disk & Storage", cmd: "vol", desc: "Display disk volume label.", syn: "vol [drive:]", ex: "vol C:" },
+            { type: "cmd", cat: "💾 Disk & Storage", cmd: "defrag", desc: "Optimize and defragment disk.", syn: "defrag [drive:]", ex: "defrag C:" },
+
+            // SECURITY & PERMISSIONS
+            { type: "cmd", cat: "🔐 Security", cmd: "cipher", desc: "Encrypt or decrypt files.", syn: "cipher /e [folder]", ex: "cipher /e C:\\Secret" },
+            { type: "cmd", cat: "🔐 Security", cmd: "icacls", desc: "Display or modify file permissions.", syn: "icacls [file]", ex: "icacls report.txt" },
+
+            // SYSTEM REPAIR
+            { type: "cmd", cat: "🛠 System Repair", cmd: "sfc /scannow", desc: "Scan and repair Windows system files.", syn: "sfc /scannow", ex: "sfc /scannow" },
+            { type: "cmd", cat: "🛠 System Repair", cmd: "DISM", desc: "Repair Windows system image.", syn: "DISM /Online /Cleanup-Image /RestoreHealth", ex: "DISM /Online /Cleanup-Image /RestoreHealth" },
+
+            // UTILITIES
+            { type: "cmd", cat: "🧰 Utilities", cmd: "cls", desc: "Clear command prompt screen.", syn: "cls", ex: "cls" },
+            { type: "cmd", cat: "🧰 Utilities", cmd: "echo", desc: "Display messages.", syn: "echo [text]", ex: "echo Hello World" },
+            { type: "cmd", cat: "🧰 Utilities", cmd: "pause", desc: "Pause batch file execution.", syn: "pause", ex: "pause" },
+            { type: "cmd", cat: "🧰 Utilities", cmd: "color", desc: "Change CMD text color.", syn: "color [attr]", ex: "color 0a" },
+            { type: "cmd", cat: "🧰 Utilities", cmd: "title", desc: "Change command window title.", syn: "title [text]", ex: "title Admin Console" },
+
+            // POWERSHELL EQUIVALENTS
+            // FILE & DIRECTORY
+            { type: "ps", cat: "📁 File & Directory", cmd: "Get-ChildItem", desc: "List items in a folder (alias: ls, dir).", syn: "Get-ChildItem -Path [path]", ex: "Get-ChildItem -Path C:\\" },
+            { type: "ps", cat: "📁 File & Directory", cmd: "Set-Location", desc: "Change the current directory (alias: cd).", syn: "Set-Location [path]", ex: "Set-Location C:\\Windows" },
+            { type: "ps", cat: "📁 File & Directory", cmd: "New-Item", desc: "Create a new file or directory.", syn: "New-Item -ItemType [File|Directory] -Path [path]", ex: "New-Item -ItemType Directory -Path C:\\Backup" },
+            { type: "ps", cat: "📁 File & Directory", cmd: "Copy-Item", desc: "Copy files or folders.", syn: "Copy-Item [source] -Destination [dest]", ex: "Copy-Item C:\\file.txt D:\\Backup\\" },
+            { type: "ps", cat: "📁 File & Directory", cmd: "Move-Item", desc: "Move files or folders.", syn: "Move-Item [source] -Destination [dest]", ex: "Move-Item report.txt D:\\Docs\\" },
+            { type: "ps", cat: "📁 File & Directory", cmd: "Remove-Item", desc: "Delete files or directories.", syn: "Remove-Item [path] -Recurse", ex: "Remove-Item C:\\Temp\\* -Recurse" },
+            { type: "ps", cat: "📁 File & Directory", cmd: "Rename-Item", desc: "Rename a file or folder.", syn: "Rename-Item [path] -NewName [name]", ex: "Rename-Item report.txt report_old.txt" },
+            { type: "ps", cat: "📁 File & Directory", cmd: "Get-Content", desc: "Read content of a file.", syn: "Get-Content [file]", ex: "Get-Content C:\\logs\\error.log" },
+
+            // SYSTEM INFORMATION
+            { type: "ps", cat: "⚙️ System Information", cmd: "Get-ComputerInfo", desc: "Display detailed computer information.", syn: "Get-ComputerInfo", ex: "Get-ComputerInfo" },
+            { type: "ps", cat: "⚙️ System Information", cmd: "Get-Process", desc: "Show running processes.", syn: "Get-Process", ex: "Get-Process chrome" },
+            { type: "ps", cat: "⚙️ System Information", cmd: "Stop-Process", desc: "Stop a running process.", syn: "Stop-Process -Name [process]", ex: "Stop-Process -Name notepad" },
+            { type: "ps", cat: "⚙️ System Information", cmd: "Get-Service", desc: "Gets services on the computer.", syn: "Get-Service", ex: "Get-Service -Name WSearch" },
+            { type: "ps", cat: "⚙️ System Information", cmd: "Start-Service", desc: "Start a service.", syn: "Start-Service -Name [service]", ex: "Start-Service -Name Spooler" },
+            { type: "ps", cat: "⚙️ System Information", cmd: "Stop-Service", desc: "Stop a service.", syn: "Stop-Service -Name [service]", ex: "Stop-Service -Name Spooler" },
+
+            // NETWORK
+            { type: "ps", cat: "🌐 Network", cmd: "Test-Connection", desc: "Ping a remote computer.", syn: "Test-Connection [hostname]", ex: "Test-Connection google.com" },
+            { type: "ps", cat: "🌐 Network", cmd: "Get-NetIPAddress", desc: "Get IP address information.", syn: "Get-NetIPAddress", ex: "Get-NetIPAddress -AddressFamily IPv4" },
+            { type: "ps", cat: "🌐 Network", cmd: "Get-NetAdapter", desc: "Display network adapter details.", syn: "Get-NetAdapter", ex: "Get-NetAdapter" },
+            { type: "ps", cat: "🌐 Network", cmd: "Resolve-DnsName", desc: "Perform DNS lookup.", syn: "Resolve-DnsName [domain]", ex: "Resolve-DnsName google.com" },
+
+            // USER MANAGEMENT
+            { type: "ps", cat: "👤 User Management", cmd: "Get-LocalUser", desc: "Display local user accounts.", syn: "Get-LocalUser", ex: "Get-LocalUser" },
+            { type: "ps", cat: "👤 User Management", cmd: "New-LocalUser", desc: "Create a new local user.", syn: "New-LocalUser -Name [user] -Password [pass]", ex: "New-LocalUser -Name testuser" },
+            { type: "ps", cat: "👤 User Management", cmd: "Remove-LocalUser", desc: "Delete a local user.", syn: "Remove-LocalUser -Name [user]", ex: "Remove-LocalUser -Name testuser" },
+
+            // DISK & STORAGE
+            { type: "ps", cat: "💾 Disk & Storage", cmd: "Get-Disk", desc: "Show disk information.", syn: "Get-Disk", ex: "Get-Disk" },
+            { type: "ps", cat: "💾 Disk & Storage", cmd: "Get-Volume", desc: "Display volume information.", syn: "Get-Volume", ex: "Get-Volume" },
+            { type: "ps", cat: "💾 Disk & Storage", cmd: "Get-PSDrive", desc: "List drives in the system.", syn: "Get-PSDrive", ex: "Get-PSDrive" },
+
+            // SECURITY
+            { type: "ps", cat: "🔐 Security", cmd: "Get-Acl", desc: "Display file permissions.", syn: "Get-Acl [path]", ex: "Get-Acl C:\\Data" },
+            { type: "ps", cat: "🔐 Security", cmd: "Set-Acl", desc: "Set file permissions.", syn: "Set-Acl [path]", ex: "Set-Acl C:\\Data" },
+
+            // UTILITIES
+            { type: "ps", cat: "🧰 Utilities", cmd: "Clear-Host", desc: "Clear PowerShell screen.", syn: "Clear-Host", ex: "Clear-Host" },
+            { type: "ps", cat: "🧰 Utilities", cmd: "Write-Output", desc: "Display output text.", syn: "Write-Output [text]", ex: "Write-Output 'Hello World'" },
+            { type: "ps", cat: "🧰 Utilities", cmd: "Get-History", desc: "Display command history.", syn: "Get-History", ex: "Get-History" },
+            { type: "ps", cat: "🧰 Utilities", cmd: "Start-Process", desc: "Launch an application.", syn: "Start-Process [program]", ex: "Start-Process notepad.exe" }
+
+];
+
+let currentMode="cmd"
+
+
+
+function switchMode(mode){
+
+currentMode=mode
+
+document.body.classList.remove("theme-cmd","theme-ps")
+
+document.body.classList.add(mode==="cmd"?"theme-cmd":"theme-ps")
+
+const btnCmd=document.getElementById("btn-cmd")
+const btnPs=document.getElementById("btn-ps")
+
+if(mode==="cmd"){
+
+btnCmd.className="px-8 py-2.5 rounded-xl text-xs font-black bg-blue-600 text-white shadow-lg"
+btnPs.className="px-8 py-2.5 rounded-xl text-xs font-black text-white/40 hover:text-white"
+
+}else{
+
+btnPs.className="px-8 py-2.5 rounded-xl text-xs font-black bg-emerald-500 text-white shadow-lg"
+btnCmd.className="px-8 py-2.5 rounded-xl text-xs font-black text-white/40 hover:text-white"
+
+}
+
+render()
+
+}
+
+
+
+function render(){
+
+const query=document.getElementById("search").value.toLowerCase()
+
+const container=document.getElementById("main-content")
+
+container.innerHTML=""
+
+
+
+const filtered=commandData.filter(i=>
+
+i.type===currentMode &&
+
+(i.cmd.toLowerCase().includes(query) ||
+
+i.desc.toLowerCase().includes(query) ||
+
+i.cat.toLowerCase().includes(query))
+
+)
+
+
+
+const categories=[...new Set(filtered.map(i=>i.cat))]
+
+
+
+categories.forEach(cat=>{
+
+const section=document.createElement("section")
+
+section.className="mb-16"
+
+
+
+section.innerHTML=`
+
+<div class="flex items-center gap-4 mb-8">
+
+<div class="h-8 w-1 category-pill rounded-full"></div>
+
+<h2 class="text-2xl font-black uppercase tracking-tight">
+${cat}
+</h2>
+
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+${filtered.filter(i=>i.cat===cat).map(i=>`
+
+<div class="custom-card rounded-3xl p-8 hover:scale-[1.02] hover:border-blue-500/40 transition-all shadow-2xl shadow-black/50">
+
+<div class="flex justify-between items-start mb-6">
+
+<h3 class="terminal-font text-2xl font-bold text-blue-400">${i.cmd}</h3>
+
+<span class="text-[10px] font-bold text-gray-600 border border-white/5 px-2 py-1 rounded">
+STABLE
+</span>
+
+</div>
+
+<p class="text-sm text-gray-400 mb-6 leading-relaxed">
+${i.desc}
+</p>
+
+<div class="space-y-4">
+
+<div class="bg-black/40 p-4 rounded-xl border border-white/5">
+
+<label class="text-[9px] font-black text-blue-500 uppercase tracking-widest block mb-2">
+Syntax
+</label>
+
+<code class="terminal-font text-xs text-gray-300">
+${i.syn}
+</code>
+
+</div>
+
+<div class="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10">
+
+<label class="text-[9px] font-black text-emerald-500 uppercase tracking-widest block mb-2">
+Example
+</label>
+
+<code class="terminal-font text-xs text-emerald-400">
+${i.ex}
+</code>
+
+</div>
+
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+`
+
+container.appendChild(section)
+
+})
+
+}
+
+
+
+document.getElementById("search").addEventListener("input",render)
+
+window.onload=render
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+
+
+</body>
+</html>

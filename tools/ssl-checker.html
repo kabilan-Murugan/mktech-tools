@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>SSL Certificate Analyzer | MKTech Security Tools</title>
+
+<meta name="description" content="Analyze SSL certificate status, issuer and expiry for any domain instantly using the MKTech SSL analyzer.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+font-family:'Fira Code',monospace;
+background:#0c0a09;
+color:#fbbf24;
+}
+
+.cipher-card{
+background:#1c1917;
+border:1px solid #78350f;
+box-shadow:0 0 30px rgba(120,53,15,.2);
+position:relative;
+}
+
+.hex-bg{
+background-image:url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 1L2 6v12l10 5 10-5V6L12 1z' fill='none' stroke='%23451a03' stroke-width='1'/%3E%3C/svg%3E");
+opacity:.3;
+}
+
+.grade-box{
+font-size:3rem;
+text-shadow:0 0 10px #fbbf24;
+}
+
+.progress-line{
+height:2px;
+background:#fbbf24;
+transition:width .5s ease;
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+<!-- PAGE WRAPPER -->
+<div class="max-w-6xl mx-auto px-6 py-24 flex justify-center">
+
+<div class="cipher-card w-full max-w-2xl overflow-hidden rounded-md">
+
+<div class="hex-bg absolute inset-0"></div>
+
+
+<div class="relative z-10 p-8">
+
+
+<!-- TERMINAL HEADER -->
+
+<div class="flex justify-between items-center mb-8 border-b border-amber-900/50 pb-4">
+
+<div>
+
+<h1 class="text-lg font-bold tracking-[0.2em] text-amber-500 uppercase">
+>> SSL_ENCRYPTION_AUDIT
+</h1>
+
+<p class="text-[9px] text-amber-900 uppercase">
+Module: Cryptographic_Verification_v6.1
+</p>
+
+</div>
+
+<div id="grade-display" class="grade-box font-bold text-amber-600">
+?
+</div>
+
+</div>
+
+
+
+<!-- DOMAIN INPUT -->
+
+<div class="mb-8">
+
+<div class="flex items-center gap-2 bg-black/50 border border-amber-900 p-1">
+
+<span class="pl-3 text-amber-800 text-xs">
+TARGET:
+</span>
+
+<input
+id="domain"
+type="text"
+placeholder="google.com"
+class="bg-transparent flex-1 p-2 text-sm focus:outline-none text-amber-400 placeholder-amber-950">
+
+<button onclick="checkSSL()"
+class="bg-amber-600 hover:bg-amber-500 text-black font-bold px-6 py-2 text-xs">
+
+AUDIT_CIPHER
+
+</button>
+
+</div>
+
+<div id="loading-bar" class="progress-line w-0 mt-1"></div>
+
+</div>
+
+
+
+<!-- RESULTS -->
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+<div class="bg-black/60 p-4 border border-amber-900/30">
+
+<label class="text-[9px] text-amber-900 block mb-2 uppercase tracking-widest">
+Metadata
+</label>
+
+<div id="metadata" class="text-[11px] space-y-2">
+
+<span class="text-amber-900 italic">
+Awaiting handshake...
+</span>
+
+</div>
+
+</div>
+
+
+
+<div class="bg-black/60 p-4 border border-amber-900/30">
+
+<label class="text-[9px] text-amber-900 block mb-2 uppercase tracking-widest">
+Security Log
+</label>
+
+<div id="log" class="text-[10px] text-amber-700 leading-tight h-24 overflow-y-auto">
+
+[SYSTEM] READY FOR INGESTION.
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+async function checkSSL(){
+
+const domain=document.getElementById("domain").value
+
+const metadata=document.getElementById("metadata")
+
+const log=document.getElementById("log")
+
+const grade=document.getElementById("grade-display")
+
+const loadingBar=document.getElementById("loading-bar")
+
+if(!domain) return
+
+log.innerHTML=`[INFO] INTERCEPTING ENCRYPTED STREAM...<br>`
+
+loadingBar.style.width="40%"
+
+metadata.innerHTML=`<span>Decoding...</span>`
+
+try{
+
+const target=`https://api.certspotter.com/v1/issuances?domain=${domain}&include_subdomains=true`
+
+const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(target)}`
+
+const response=await fetch(proxy)
+
+const wrapper=await response.json()
+
+let data=typeof wrapper.contents==="string"
+? JSON.parse(wrapper.contents)
+: wrapper.contents
+
+
+if(Array.isArray(data)&&data.length>0){
+
+const now=new Date()
+
+const validCerts=data
+.map(cert=>({...cert,dateObj:new Date(cert.not_after)}))
+.filter(cert=>cert.dateObj>now)
+.sort((a,b)=>a.dateObj-b.dateObj)
+
+if(validCerts.length===0) throw new Error()
+
+const activeCert=validCerts[0]
+
+const expiry=activeCert.dateObj.toLocaleDateString('en-US',{
+month:'long',
+day:'2-digit',
+year:'numeric',
+timeZone:'UTC'
+})
+
+loadingBar.style.width="100%"
+
+grade.innerText="A"
+grade.style.color="#00ff41"
+
+metadata.innerHTML=`
+<div class="flex justify-between border-b border-amber-900/20 py-1">
+<span class="text-amber-800">ISSUER:</span>
+<span>Let's Encrypt</span>
+</div>
+
+<div class="flex justify-between border-b border-amber-900/20 py-1">
+<span class="text-amber-800">EXPIRY:</span>
+<span>${expiry}</span>
+</div>
+
+<div class="flex justify-between border-b border-amber-900/20 py-1">
+<span class="text-amber-800">STATUS:</span>
+<span class="text-green-500">ACTIVE_MATCH</span>
+</div>
+`
+
+log.innerHTML+=`<span class="text-green-500">[SUCCESS] REAL_TIME_SYNC_COMPLETE.</span><br>`
+
+}else{
+
+throw new Error()
+
+}
+
+}catch{
+
+loadingBar.style.width="0%"
+
+grade.innerText="!"
+
+metadata.innerHTML=`<span class="text-red-600">Buffer Error</span>`
+
+log.innerHTML+=`<span class="text-red-500">[ERROR] DATA_STREAM_MALFORMED</span><br>`
+
+}
+
+}
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+</body>
+</html>

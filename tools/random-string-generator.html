@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Random String Generator | MKTech Tools</title>
+
+<meta name="description" content="Generate secure random strings using a CSPRNG generator with customizable character sets and length.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+
+<body class="bg-slate-950 text-slate-200">
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+<!-- PAGE WRAPPER -->
+<div class="max-w-6xl mx-auto px-6 py-24 flex justify-center">
+
+<div class="bg-slate-900 shadow-2xl rounded-3xl p-8 w-full max-w-2xl border border-slate-800 relative overflow-hidden">
+
+
+<!-- Background Glow -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-yellow-600/10 blur-[100px] rounded-full"></div>
+
+
+<header class="flex justify-between items-center mb-8">
+
+<div>
+<h1 class="text-3xl font-extrabold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
+String Lab
+</h1>
+
+<p class="text-slate-500 text-sm font-medium uppercase tracking-widest">
+Secure CSPRNG Generator
+</p>
+</div>
+
+<div class="bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
+<span id="entropyTag" class="text-[10px] font-bold text-amber-400">
+High Entropy
+</span>
+</div>
+
+</header>
+
+
+<div class="space-y-6">
+
+
+<!-- OUTPUT -->
+
+<div class="relative">
+
+<input id="output"
+type="text"
+readonly
+class="w-full bg-slate-950 border border-slate-700 rounded-2xl px-6 py-5 text-xl font-mono text-amber-400 shadow-inner outline-none focus:ring-2 focus:ring-amber-500"
+placeholder="Generating...">
+
+<button onclick="copyString()"
+class="absolute right-3 top-3 bg-slate-800 hover:bg-slate-700 text-slate-300 p-2 rounded-xl">
+
+📋
+
+</button>
+
+</div>
+
+
+
+<!-- CONFIG -->
+
+<div class="grid md:grid-cols-2 gap-8 bg-slate-800/30 p-6 rounded-2xl border border-slate-800">
+
+
+<!-- LENGTH -->
+
+<div class="space-y-4">
+
+<div class="flex justify-between items-end">
+<label class="text-xs font-bold text-slate-500 uppercase">
+String Length
+</label>
+
+<span id="lengthDisplay"
+class="text-xl font-black text-white">
+16
+</span>
+</div>
+
+
+<input
+type="range"
+id="lengthSlider"
+min="4"
+max="128"
+value="16"
+class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
+oninput="updateLength(this.value)">
+
+
+<div class="flex items-center gap-2 mt-2">
+
+<input
+type="checkbox"
+id="excludeSimilar"
+checked
+onchange="generateString()"
+class="w-4 h-4 accent-amber-500">
+
+<label class="text-[10px] text-slate-400 uppercase font-bold cursor-pointer">
+Exclude (i, l, 1, L, o, 0, O)
+</label>
+
+</div>
+
+</div>
+
+
+
+<!-- CHARSET -->
+
+<div class="grid grid-cols-2 gap-3">
+
+<label class="flex items-center gap-2 text-xs font-semibold cursor-pointer group">
+<input type="checkbox" id="uppercase" checked onchange="generateString()" class="w-4 h-4 accent-amber-500">
+<span class="group-hover:text-amber-400 transition">A-Z</span>
+</label>
+
+<label class="flex items-center gap-2 text-xs font-semibold cursor-pointer group">
+<input type="checkbox" id="lowercase" checked onchange="generateString()" class="w-4 h-4 accent-amber-500">
+<span class="group-hover:text-amber-400 transition">a-z</span>
+</label>
+
+<label class="flex items-center gap-2 text-xs font-semibold cursor-pointer group">
+<input type="checkbox" id="numbers" checked onchange="generateString()" class="w-4 h-4 accent-amber-500">
+<span class="group-hover:text-amber-400 transition">0-9</span>
+</label>
+
+<label class="flex items-center gap-2 text-xs font-semibold cursor-pointer group">
+<input type="checkbox" id="symbols" onchange="generateString()" class="w-4 h-4 accent-amber-500">
+<span class="group-hover:text-amber-400 transition">!@#$%</span>
+</label>
+
+</div>
+
+</div>
+
+
+
+<button onclick="generateString()"
+class="w-full bg-amber-600 hover:bg-amber-500 text-slate-950 py-4 rounded-2xl font-black text-lg shadow-lg transition active:scale-95">
+
+GENERATE STRING
+
+</button>
+
+</div>
+
+
+
+<footer class="mt-8 text-center">
+<p class="text-[10px] text-slate-600 font-mono tracking-widest">
+MKTech Infrastructure Tooling v3.0
+</p>
+</footer>
+
+
+</div>
+</div>
+
+
+
+<script>
+
+function updateLength(val){
+document.getElementById("lengthDisplay").innerText=val
+generateString()
+}
+
+
+
+function generateString(){
+
+const length=document.getElementById("lengthSlider").value
+
+const useUpper=document.getElementById("uppercase").checked
+const useLower=document.getElementById("lowercase").checked
+const useNumbers=document.getElementById("numbers").checked
+const useSymbols=document.getElementById("symbols").checked
+const exclude=document.getElementById("excludeSimilar").checked
+
+let charset=""
+
+if(useUpper) charset+="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+if(useLower) charset+="abcdefghijklmnopqrstuvwxyz"
+if(useNumbers) charset+="0123456789"
+if(useSymbols) charset+="!@#$%^&*()_+-=[]{}|;:,.<>?"
+
+if(exclude) charset=charset.replace(/[il1Lo0O]/g,'')
+
+if(!charset){
+document.getElementById("output").value="Select Options"
+return
+}
+
+let result=""
+const array=new Uint32Array(length)
+
+window.crypto.getRandomValues(array)
+
+for(let i=0;i<length;i++){
+result+=charset[array[i]%charset.length]
+}
+
+document.getElementById("output").value=result
+
+}
+
+
+
+async function copyString(){
+
+const output=document.getElementById("output")
+
+if(output.value==="Select Options") return
+
+await navigator.clipboard.writeText(output.value)
+
+const original=output.style.color
+output.style.color="#ffffff"
+
+setTimeout(()=>{
+output.style.color=original
+},500)
+
+}
+
+
+
+generateString()
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+</body>
+</html>

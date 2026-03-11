@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MKTech | PowerShell Automation Hub</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- PowerShell language support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+
+    <script>
+        hljs.highlightAll();
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #010c15;
+            color: #94a3b8;
+        }
+
+        .terminal-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .script-card {
+            background: #0b1622;
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .copy-btn {
+            font-size: 10px;
+            background: rgba(255, 255, 255, .05);
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, .12);
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 110px;
+        }
+    </style>
+
+</head>
+
+<body class="min-h-screen pb-20">
+
+    <div id="header"></div>
+
+    <main class="max-w-7xl mx-auto px-6 py-14">
+
+        <!-- PAGE HEADER -->
+
+        <div class="mb-12 flex flex-col md:flex-row md:justify-between gap-6">
+
+            <div>
+
+                <h1 class="text-3xl font-extrabold text-white">
+                    PowerShell <span class="text-blue-400">Automation Scripts</span>
+                </h1>
+
+                <p class="text-sm text-slate-500 mt-1">
+                    SysAdmin toolkit for diagnostics, monitoring and automation
+                </p>
+
+            </div>
+
+            <input id="search" type="text" placeholder="Search scripts..."
+                class="bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm outline-none" />
+
+        </div>
+
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+            <!-- SIDEBAR -->
+
+            <nav class="lg:col-span-3 sidebar">
+
+                <p class="text-xs uppercase text-slate-500 mb-4">Modules</p>
+
+                <ul class="space-y-3 text-sm">
+
+                    <li class="text-white">System Diagnostics</li>
+                    <li>Network Stack</li>
+                    <li>AD Management</li>
+                    <li>Cloud Sync</li>
+
+                </ul>
+
+            </nav>
+
+
+            <!-- SCRIPT CONTENT -->
+
+            <div class="lg:col-span-9 space-y-12" id="scriptContainer">
+
+
+                <!-- SCRIPT 1 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+
+                        <h2 class="text-white font-bold">01 Full System Inventory</h2>
+
+                        <button class="copy-btn">COPY</button>
+
+                    </div>
+
+                    <pre><code class="language-powershell">
+Get-ComputerInfo -Property "Windows*", "Os*"
+</code></pre>
+
+                    <p class="text-sm mt-3">
+                        Displays OS version, build number, BIOS and system metadata.
+                    </p>
+
+                </div>
+
+
+                <!-- SCRIPT 2 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">02 Advanced Storage Metrics</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+Get-PSDrive -PSProvider FileSystem |
+Select-Object Name, @{n='Used(GB)';e={($_.Used/1GB).ToString('F2')}}
+</code></pre>
+
+                </div>
+
+
+                <!-- SCRIPT 3 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">03 Active Service Monitor</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+Get-Service |
+Where-Object {$_.Status -eq "Running"}
+</code></pre>
+
+                </div>
+
+
+                <!-- SCRIPT 4 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">04 Stale Account Discovery</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+Search-ADAccount -AccountInactive -TimeSpan ([TimeSpan]::FromDays(90)) |
+Where-Object {$_.Enabled -eq $true} |
+Export-Csv "C:\Audit\StaleUsers.csv"
+</code></pre>
+
+                </div>
+
+
+                <!-- SCRIPT 5 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">05 Log Rotation Cleanup</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+Get-ChildItem "C:\inetpub\logs\LogFiles" -Recurse |
+Where-Object {$_.LastWriteTime -lt (Get-Date).AddDays(-30)} |
+Remove-Item -Force
+</code></pre>
+
+                </div>
+
+
+                <!-- SCRIPT 6 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">06 Remote Port Probe</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+Test-NetConnection -ComputerName "SRV-SQL-01" -Port 1433
+</code></pre>
+
+                </div>
+
+
+                <!-- SCRIPT 7 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">07 Top CPU Processes</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+Get-Process |
+Sort-Object CPU -Descending |
+Select-Object -First 10
+</code></pre>
+
+                </div>
+
+
+                <!-- SCRIPT 8 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">08 Event Log Error Scan</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+Get-EventLog -LogName System -EntryType Error -Newest 20
+</code></pre>
+
+                </div>
+
+
+                <!-- SCRIPT 9 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">09 Network Adapter Health</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+Get-NetAdapter |
+Where-Object {$_.Status -eq "Up"}
+</code></pre>
+
+                </div>
+
+
+                <!-- SCRIPT 10 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">10 Windows Update Status</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+Get-HotFix |
+Sort-Object InstalledOn -Descending
+</code></pre>
+
+                </div>
+
+
+                <!-- SCRIPT 11 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">11 Memory Usage Overview</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+Get-CimInstance Win32_OperatingSystem |
+Select TotalVisibleMemorySize, FreePhysicalMemory
+</code></pre>
+
+                </div>
+
+
+                <!-- SCRIPT 12 -->
+                <div class="script-card script">
+
+                    <div class="flex justify-between mb-3">
+                        <h2 class="text-white font-bold">12 Bulk Ping Scanner</h2>
+                        <button class="copy-btn">COPY</button>
+                    </div>
+
+                    <pre><code class="language-powershell">
+1..50 | ForEach-Object {
+Test-Connection "192.168.1.$_" -Count 1 -Quiet
+}
+</code></pre>
+
+                </div>
+
+
+            </div>
+        </div>
+    </main>
+
+
+    <footer
+        class="mt-20 border-t border-white/5 pt-8 max-w-7xl mx-auto flex justify-between text-[10px] uppercase opacity-50">
+
+        <span>© 2026 MKTech Systems</span>
+
+        <div class="flex gap-6">
+            <span>Documentation</span>
+            <span>GitHub Repository</span>
+        </div>
+
+    </footer>
+
+
+    <script src="/js/include.js"></script>
+    <script>
+        loadComponent("header", "/components/header.html");
+    </script>
+
+
+    <script>
+
+        /* COPY BUTTON */
+
+        document.querySelectorAll(".copy-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const code = btn.parentElement.nextElementSibling.innerText
+                navigator.clipboard.writeText(code)
+                btn.innerText = "COPIED"
+                setTimeout(() => btn.innerText = "COPY", 1500)
+            })
+        })
+
+        /* SEARCH FILTER */
+
+        const search = document.getElementById("search")
+        const scripts = document.querySelectorAll(".script")
+
+        search.addEventListener("keyup", () => {
+
+            const q = search.value.toLowerCase()
+
+            scripts.forEach(card => {
+                card.style.display =
+                    card.innerText.toLowerCase().includes(q) ? "block" : "none"
+            })
+
+        })
+
+    </script>
+
+</body>
+
+</html>

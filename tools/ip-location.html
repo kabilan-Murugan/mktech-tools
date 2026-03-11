@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>IP Geolocation Lookup | MKTech Network Tools</title>
+
+<meta name="description" content="Trace IP address location, ISP, coordinates and timezone instantly using this free IP geolocation lookup tool.">
+
+<meta name="keywords" content="ip geolocation lookup, ip tracker, ip location finder, trace ip address">
+
+<meta name="author" content="MKTech">
+
+<meta name="google-adsense-account" content="ca-pub-xxxxxxxxxxxx">
+
+<link rel="canonical" href="https://mktech.fun/tools/ip-location">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+body{
+background:#0a0a0a;
+color:#00ff9c;
+font-family:Courier New,monospace;
+}
+
+.cyber-box{
+border:1px solid #ff8c00;
+background:#111;
+box-shadow:0 0 15px rgba(255,140,0,0.2);
+}
+
+.cyber-input{
+background:#000;
+border:1px solid #333;
+color:#ff8c00;
+transition:.3s;
+}
+
+.cyber-input:focus{
+border-color:#ff8c00;
+outline:none;
+box-shadow:0 0 8px rgba(255,140,0,0.2);
+}
+
+.cyber-btn{
+background:#ff8c00;
+transition:.2s;
+}
+
+.cyber-btn:hover{
+background:#ffa500;
+}
+
+.data-label{
+color:#888;
+font-size:.7rem;
+text-transform:uppercase;
+}
+
+.data-value{
+color:#00ff9c;
+font-size:.95rem;
+}
+
+.map-link{
+color:#ff8c00;
+text-decoration:underline;
+font-size:.8rem;
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+
+<!-- PAGE WRAPPER -->
+<div class="max-w-6xl mx-auto px-6 py-24">
+
+<div class="flex justify-center">
+
+<div class="cyber-box w-full max-w-2xl p-8 rounded-lg">
+
+<div class="flex justify-between items-center mb-6">
+
+<h1 class="text-xl font-bold text-orange-400 tracking-tighter">
+>> IP_GEOLOCATION_TRACE
+</h1>
+
+<button onclick="getMyIP()"
+class="text-[10px] border border-orange-500/50 px-2 py-1 hover:bg-orange-500/10">
+
+DETECT_MY_IP
+
+</button>
+
+</div>
+
+
+
+<div class="flex gap-2 mb-6">
+
+<input id="ip"
+class="cyber-input flex-1 p-3"
+placeholder="TARGET_IP (e.g. 8.8.8.8)">
+
+<button onclick="lookupIP()"
+id="traceBtn"
+class="cyber-btn px-6 py-3 text-black font-black">
+
+TRACE_IP
+
+</button>
+
+</div>
+
+
+
+<div id="loading"
+class="hidden mb-4 text-xs animate-pulse text-orange-500">
+
+[PROCESS] INTERCEPTING_PACKET_HEADERS...
+
+</div>
+
+
+
+<div id="result-grid"
+class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-orange-900/30 pt-6">
+
+<div class="bg-black/40 p-3 border border-orange-900/20">
+
+<p class="data-label">
+Network_Address
+</p>
+
+<p id="res-ip" class="data-value font-bold"></p>
+
+</div>
+
+
+
+<div class="bg-black/40 p-3 border border-orange-900/20">
+
+<p class="data-label">
+Service_Provider
+</p>
+
+<p id="res-isp" class="data-value truncate"></p>
+
+</div>
+
+
+
+<div class="bg-black/40 p-3 border border-orange-900/20">
+
+<p class="data-label">
+Location
+</p>
+
+<p id="res-location" class="data-value"></p>
+
+</div>
+
+
+
+<div class="bg-black/40 p-3 border border-orange-900/20">
+
+<p class="data-label">
+Timezone
+</p>
+
+<p id="res-tz" class="data-value"></p>
+
+</div>
+
+
+
+<div class="bg-black/40 p-3 border border-orange-900/20 md:col-span-2 flex justify-between items-center">
+
+<div>
+
+<p class="data-label">
+Coordinates
+</p>
+
+<p id="res-coords" class="data-value"></p>
+
+</div>
+
+<a id="res-map"
+target="_blank"
+class="map-link hidden">
+
+OPEN_SATELLITE_VIEW
+
+</a>
+
+</div>
+
+</div>
+
+
+
+<div id="error"
+class="hidden text-red-500 text-center p-4 border border-red-900/30 bg-red-900/10 mt-4">
+
+[ERROR] TRACE_FAILED: INVALID_IP_OR_API_LIMIT
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+async function lookupIP(){
+
+const ip=document.getElementById("ip").value.trim()
+
+const grid=document.getElementById("result-grid")
+
+const loading=document.getElementById("loading")
+
+const error=document.getElementById("error")
+
+const btn=document.getElementById("traceBtn")
+
+if(!ip){
+alert("TARGET_REQUIRED")
+return
+}
+
+btn.disabled=true
+
+grid.classList.add("hidden")
+
+error.classList.add("hidden")
+
+loading.classList.remove("hidden")
+
+try{
+
+const response=await fetch(`https://ip-api.com/json/${ip}`)
+
+const data=await response.json()
+
+if(data.status==="fail") throw new Error()
+
+document.getElementById("res-ip").innerText=data.query
+
+document.getElementById("res-isp").innerText=data.isp||"UNKNOWN_ISP"
+
+document.getElementById("res-location").innerText=`${data.city}, ${data.regionName}, ${data.country}`
+
+document.getElementById("res-tz").innerText=data.timezone
+
+document.getElementById("res-coords").innerText=`${data.lat}, ${data.lon}`
+
+const mapLink=document.getElementById("res-map")
+
+mapLink.href=`https://www.google.com/maps?q=${data.lat},${data.lon}`
+
+mapLink.classList.remove("hidden")
+
+loading.classList.add("hidden")
+
+grid.classList.remove("hidden")
+
+}catch{
+
+loading.classList.add("hidden")
+
+error.classList.remove("hidden")
+
+}
+
+btn.disabled=false
+
+}
+
+
+
+async function getMyIP(){
+
+try{
+
+const res=await fetch("https://api.ipify.org?format=json")
+
+const data=await res.json()
+
+document.getElementById("ip").value=data.ip
+
+lookupIP()
+
+}catch{
+
+alert("COULD_NOT_DETECT_IP")
+
+}
+
+}
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+
+
+<script type="application/ld+json">
+
+{
+"@context":"https://schema.org",
+"@type":"SoftwareApplication",
+"name":"IP Geolocation Lookup",
+"applicationCategory":"DeveloperApplication",
+"operatingSystem":"Web",
+"description":"Trace IP location, ISP and coordinates instantly.",
+"url":"https://mktech.fun/tools/ip-location",
+"creator":{
+"@type":"Organization",
+"name":"MKTech"
+}
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Base64 Encoder & Decoder Tool | MKTech</title>
+
+<meta name="description" content="Free online Base64 encoder and decoder tool with UTF-8 support. Fast, secure and developer friendly.">
+<meta name="keywords" content="base64 encoder, base64 decoder, base64 converter, encode decode base64 online">
+<meta name="author" content="MKTech">
+
+<link rel="canonical" href="https://mktech.fun/tools/base64">
+
+<meta name="google-adsense-account" content="ca-pub-xxxxxxxxxxxx">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+
+<body class="bg-slate-950 text-slate-200 font-sans">
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+<!-- MAIN CONTENT -->
+<section class="flex items-center justify-center p-6 mt-20">
+
+<div class="bg-slate-900 shadow-2xl rounded-3xl p-8 w-full max-w-5xl border border-slate-800 relative overflow-hidden">
+
+<!-- Glow -->
+<div class="absolute -top-24 -left-24 w-64 h-64 bg-purple-600/10 blur-[100px] rounded-full"></div>
+
+
+<header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+
+<div>
+<h1 class="text-3xl font-extrabold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+Base64 Encoder & Decoder
+</h1>
+
+<p class="text-slate-500 text-sm">
+Free UTF-8 safe Base64 encoding and decoding tool
+</p>
+</div>
+
+
+<div class="flex items-center gap-4 bg-slate-800 p-1.5 rounded-xl border border-slate-700">
+
+<button id="modeBtn"
+onclick="toggleMode()"
+class="px-4 py-2 rounded-lg bg-purple-600 text-white font-bold text-sm">
+Encode Mode
+</button>
+
+<label class="flex items-center gap-2 px-3 cursor-pointer">
+
+<input type="checkbox"
+id="liveToggle"
+checked
+class="w-4 h-4">
+
+<span class="text-xs font-semibold uppercase tracking-wider text-slate-400">
+Live
+</span>
+
+</label>
+
+</div>
+
+</header>
+
+
+<!-- TOOL AREA -->
+<div class="grid md:grid-cols-2 gap-6">
+
+<!-- INPUT -->
+<div class="space-y-2">
+
+<div class="flex justify-between items-center px-1">
+
+<span class="text-xs font-bold uppercase tracking-widest text-slate-500">
+Source Text
+</span>
+
+<button onclick="clearAll()"
+class="text-xs text-slate-500 hover:text-red-400">
+Clear
+</button>
+
+</div>
+
+<textarea
+id="inputText"
+class="w-full bg-slate-800 border border-slate-700 rounded-2xl p-4 h-64 text-slate-100 font-mono focus:ring-2 focus:ring-purple-500 outline-none resize-none"
+placeholder="Paste text here..."></textarea>
+
+</div>
+
+
+<!-- OUTPUT -->
+<div class="space-y-2">
+
+<div class="flex justify-between items-center px-1">
+
+<span class="text-xs font-bold uppercase tracking-widest text-slate-500">
+Result
+</span>
+
+<button
+id="copyBtn"
+onclick="copyResult()"
+class="text-xs text-purple-400 hover:text-purple-300 font-bold">
+Copy
+</button>
+
+</div>
+
+<textarea
+id="outputText"
+readonly
+class="w-full bg-slate-950 border border-slate-700 rounded-2xl p-4 h-64 text-emerald-400 font-mono resize-none"
+placeholder="Result will appear here"></textarea>
+
+</div>
+
+</div>
+
+
+<!-- FOOTER -->
+<footer class="mt-6 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+
+<div id="stats" class="text-xs text-slate-500 font-mono">
+Length: 0 chars | Size: 0 bytes
+</div>
+
+<button
+onclick="processManually()"
+class="bg-white hover:bg-slate-200 text-slate-900 px-6 py-2 rounded-xl font-bold text-sm">
+Run Process
+</button>
+
+</footer>
+
+</div>
+
+</section>
+
+
+
+<script>
+
+let currentMode="encode"
+
+const input=document.getElementById("inputText")
+const output=document.getElementById("outputText")
+const stats=document.getElementById("stats")
+const modeBtn=document.getElementById("modeBtn")
+
+function encodeBase64(str){
+return btoa(unescape(encodeURIComponent(str)))
+}
+
+function decodeBase64(str){
+return decodeURIComponent(escape(atob(str)))
+}
+
+function toggleMode(){
+
+currentMode=currentMode==="encode"?"decode":"encode"
+
+modeBtn.innerText=currentMode==="encode"?"Encode Mode":"Decode Mode"
+
+process()
+
+}
+
+function process(){
+
+const val=input.value.trim()
+
+if(!val){
+output.value=""
+updateStats(0)
+return
+}
+
+try{
+
+if(currentMode==="encode"){
+output.value=encodeBase64(val)
+}else{
+output.value=decodeBase64(val)
+}
+
+output.classList.remove("text-red-400")
+output.classList.add("text-emerald-400")
+
+}catch{
+
+output.value="Invalid Base64 Input"
+output.classList.add("text-red-400")
+
+}
+
+updateStats(val.length)
+
+}
+
+function processManually(){
+process()
+}
+
+function clearAll(){
+
+input.value=""
+output.value=""
+updateStats(0)
+
+}
+
+function updateStats(len){
+
+const bytes=new Blob([input.value]).size
+
+stats.innerText=`Length: ${len} chars | Size: ${bytes} bytes`
+
+}
+
+async function copyResult(){
+
+if(!output.value)return
+
+await navigator.clipboard.writeText(output.value)
+
+const btn=document.getElementById("copyBtn")
+
+btn.innerText="Copied ✓"
+
+setTimeout(()=>{
+btn.innerText="Copy"
+},2000)
+
+}
+
+input.addEventListener("input",()=>{
+
+if(document.getElementById("liveToggle").checked){
+process()
+}
+
+})
+
+updateStats(0)
+
+</script>
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+
+<!-- SEO STRUCTURED DATA -->
+<script type="application/ld+json">
+
+{
+"@context":"https://schema.org",
+"@type":"SoftwareApplication",
+"name":"Base64 Encoder Decoder Tool",
+"operatingSystem":"Web",
+"applicationCategory":"DeveloperApplication",
+"description":"Free online Base64 encoder and decoder with UTF-8 support.",
+"url":"https://mktech.fun/tools/base64",
+"creator":{
+"@type":"Organization",
+"name":"MKTech"
+}
+}
+
+</script>
+
+</body>
+</html>

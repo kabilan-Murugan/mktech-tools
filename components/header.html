@@ -1,0 +1,135 @@
+<!-- Glass Header -->
+<header class="sticky top-0 z-50 w-full border-b border-slate-800 bg-slate-950/80 backdrop-blur-md text-white shadow-xl">
+
+<div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+
+<!-- LOGO -->
+<a href="/" class="text-2xl font-black tracking-tight">
+<span class="text-white">MK</span><span class="text-blue-500">Tech</span>
+</a>
+
+<!-- DESKTOP NAV -->
+<nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+
+<a href="/" class="text-slate-400 hover:text-white">Home</a>
+
+<!-- TOOLS -->
+<div class="relative group">
+
+<button class="flex items-center gap-1 text-slate-400 group-hover:text-blue-400">
+Tools
+</button>
+
+<div class="absolute left-0 top-full mt-2 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl w-64 py-3
+opacity-0 invisible translate-y-2
+group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+transition-all duration-300">
+
+<a class="block px-4 py-2 hover:text-blue-400" href="/tools/password-generator.html">Password Generator</a>
+<a class="block px-4 py-2 hover:text-blue-400" href="/tools/qr-code-generator.html">QR Code Generator</a>
+<a class="block px-4 py-2 hover:text-blue-400" href="/tools/ip-checker.html">IP Checker</a>
+<a class="block px-4 py-2 hover:text-blue-400" href="/tools/base64-tool.html">Base64 Tool</a>
+<a class="block px-4 py-2 hover:text-blue-400" href="/tools/json-formatter.html">JSON Formatter</a>
+<a class="block px-4 py-2 hover:text-blue-400" href="/tools/uuid-generator.html">UUID Generator</a>
+<a class="block px-4 py-2 hover:text-blue-400" href="/tools/url-encoder-decoder.html">URL Encoder / Decoder</a>
+<a class="block px-4 py-2 hover:text-blue-400" href="/tools/text-case-converter.html">Text Case Converter</a>
+<a class="block px-4 py-2 hover:text-blue-400" href="/tools/random-string-generator.html">Random String Generator</a>
+
+</div>
+</div>
+
+<!-- NETWORK -->
+<div class="relative group">
+
+<button class="flex items-center gap-1 text-slate-400 group-hover:text-emerald-400">
+Network
+</button>
+
+<div class="absolute left-0 top-full mt-2 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl w-64 py-3
+opacity-0 invisible translate-y-2
+group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+transition-all duration-300">
+
+<a class="block px-4 py-2 hover:text-emerald-400" href="/tools/dns-lookup.html">DNS Lookup</a>
+<a class="block px-4 py-2 hover:text-emerald-400" href="/tools/port-checker.html">Port Checker</a>
+<a class="block px-4 py-2 hover:text-emerald-400" href="/tools/ping-test.html">Ping Test</a>
+<a class="block px-4 py-2 hover:text-emerald-400" href="/tools/http-header-checker.html">HTTP Header Checker</a>
+<a class="block px-4 py-2 hover:text-emerald-400" href="/tools/whois-checker.html">WHOIS Checker</a>
+<a class="block px-4 py-2 hover:text-emerald-400" href="/tools/domain-age-checker.html">Domain Age Checker</a>
+<a class="block px-4 py-2 hover:text-emerald-400" href="/tools/ssl-checker.html">SSL Checker</a>
+<a class="block px-4 py-2 hover:text-emerald-400" href="/tools/subdomain-finder.html">Subdomain Finder</a>
+<a class="block px-4 py-2 hover:text-emerald-400" href="/tools/ip-location.html">IP Location</a>
+
+</div>
+</div>
+
+<!-- SYSADMIN -->
+<div class="relative group">
+
+<button class="flex items-center gap-1 text-slate-400 group-hover:text-orange-400">
+Sysadmin
+</button>
+
+<div class="absolute left-0 top-full mt-2 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl w-64 py-3
+opacity-0 invisible translate-y-2
+group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+transition-all duration-300">
+
+<a class="block px-4 py-2 hover:text-orange-400" href="/sysadmin/windows-commands.html">Windows Commands</a>
+<a class="block px-4 py-2 hover:text-orange-400" href="/sysadmin/network-troubleshooting-guide.html">Network Troubleshooting</a>
+<a class="block px-4 py-2 hover:text-orange-400" href="/sysadmin/router-reset-guide.html">Router Reset Guide</a>
+<a class="block px-4 py-2 hover:text-orange-400" href="/sysadmin/windows-activation-troubleshoot.html">Windows Activation</a>
+<a class="block px-4 py-2 hover:text-orange-400" href="/sysadmin/powershell-scripts.html">PowerShell Scripts</a>
+
+</div>
+</div>
+
+<a href="/pages/about.html" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-full">
+About
+</a>
+
+</nav>
+
+<!-- MOBILE BUTTON -->
+<button id="mobile-menu-btn" class="md:hidden text-slate-400 hover:text-white text-2xl">
+☰
+</button>
+
+</div>
+
+<!-- MOBILE MENU -->
+<div id="mobile-menu" class="hidden md:hidden bg-slate-950 border-t border-slate-800 px-6 py-6 space-y-3">
+
+<a href="/" class="block text-slate-300">Home</a>
+
+<p class="text-xs uppercase text-slate-500 mt-4">Tools</p>
+
+<a href="/tools/password-generator.html" class="block text-blue-400">Password Generator</a>
+<a href="/tools/qr-code-generator.html" class="block text-blue-400">QR Generator</a>
+<a href="/tools/ip-checker.html" class="block text-blue-400">IP Checker</a>
+
+<p class="text-xs uppercase text-slate-500 mt-4">Network</p>
+
+<a href="/tools/dns-lookup.html" class="block text-emerald-400">DNS Lookup</a>
+<a href="/tools/port-checker.html" class="block text-emerald-400">Port Checker</a>
+<a href="/tools/ping-test.html" class="block text-emerald-400">Ping Test</a>
+
+<p class="text-xs uppercase text-slate-500 mt-4">Sysadmin</p>
+
+<a href="/sysadmin/windows-commands.html" class="block text-orange-400">Windows Commands</a>
+<a href="/sysadmin/powershell-scripts.html" class="block text-orange-400">PowerShell Scripts</a>
+
+<a href="/pages/about.html" class="block text-slate-300 mt-4">About</a>
+
+</div>
+
+</header>
+
+<script>
+const btn = document.getElementById('mobile-menu-btn');
+const menu = document.getElementById('mobile-menu');
+
+btn.addEventListener('click', () => {
+menu.classList.toggle('hidden');
+});
+</script>

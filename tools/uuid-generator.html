@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>UUID Generator | MKTech Tools</title>
+
+<meta name="description" content="Generate RFC 4122 compliant UUID v4 values instantly with the MKTech UUID Forge crypto-random generator.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+
+
+<body class="bg-slate-950 text-slate-200">
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+
+<!-- PAGE WRAPPER -->
+<div class="max-w-6xl mx-auto px-6 py-24 flex justify-center">
+
+
+
+<div class="bg-slate-900 shadow-2xl rounded-3xl p-8 w-full max-w-2xl border border-slate-800 relative overflow-hidden">
+
+<!-- Glow -->
+<div class="absolute -top-24 -left-24 w-64 h-64 bg-orange-600/10 blur-[100px] rounded-full"></div>
+
+
+
+<header class="flex justify-between items-center mb-8">
+
+<div>
+<h1 class="text-3xl font-extrabold bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">
+UUID Forge
+</h1>
+
+<p class="text-slate-500 text-sm font-medium uppercase tracking-tighter">
+V4 Crypto-Random Generator
+</p>
+</div>
+
+<span class="text-[10px] bg-slate-800 px-2 py-1 rounded border border-slate-700 text-slate-400 font-mono">
+RFC 4122
+</span>
+
+</header>
+
+
+
+<div class="space-y-6">
+
+<!-- OUTPUT -->
+
+<div class="relative">
+
+<div class="absolute -top-3 left-4 bg-slate-900 px-2 text-[10px] font-bold text-orange-400 uppercase tracking-widest">
+Result
+</div>
+
+<textarea
+id="uuidOutput"
+readonly
+class="w-full bg-slate-950 border border-slate-700 rounded-2xl p-6 h-48 text-orange-400 font-mono text-sm focus:ring-2 focus:ring-orange-500 outline-none resize-none shadow-inner"
+placeholder="Generating...">
+
+</textarea>
+
+<button onclick="copyUUID()"
+class="absolute top-4 right-4 bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-600">
+
+<span id="copyText">Copy All</span>
+
+</button>
+
+</div>
+
+
+
+<!-- CONTROLS -->
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+
+<div class="space-y-2">
+
+<label class="text-[10px] font-bold text-slate-500 uppercase ml-1">
+Batch Quantity
+</label>
+
+<div class="flex items-center gap-3 bg-slate-950 border border-slate-700 rounded-xl p-1">
+
+<input
+type="range"
+id="uuidCount"
+min="1"
+max="50"
+value="1"
+class="flex-1 h-1.5 ml-3 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-orange-500"
+oninput="updateCountLabel(this.value)">
+
+<span
+id="countLabel"
+class="bg-slate-800 px-4 py-2 rounded-lg font-mono text-orange-400 min-w-[50px] text-center">
+1
+</span>
+
+</div>
+
+</div>
+
+
+
+<button onclick="generateUUIDs()"
+class="w-full bg-orange-600 hover:bg-orange-500 text-white py-4 rounded-xl font-bold shadow-lg shadow-orange-900/20">
+
+Generate New Batch
+
+</button>
+
+</div>
+
+</div>
+
+
+
+<footer class="mt-8 pt-6 border-t border-slate-800/50 flex justify-between items-center text-[10px] text-slate-600 font-mono">
+
+<div>MKTech Utility v2.1</div>
+
+<div id="timestamp">Updated: --:--:--</div>
+
+</footer>
+
+
+
+</div>
+</div>
+
+
+
+<script>
+
+function updateCountLabel(val){
+document.getElementById("countLabel").innerText=val
+}
+
+
+
+function generateUUIDs(){
+
+const count=document.getElementById("uuidCount").value
+
+const output=document.getElementById("uuidOutput")
+
+const list=[]
+
+for(let i=0;i<count;i++){
+
+list.push(crypto.randomUUID())
+
+}
+
+output.value=list.join("\n")
+
+const now=new Date()
+
+document.getElementById("timestamp").innerText=
+`Generated: ${now.toLocaleTimeString()}`
+
+document.getElementById("copyText").innerText="Copy All"
+
+}
+
+
+
+async function copyUUID(){
+
+const output=document.getElementById("uuidOutput")
+
+if(!output.value) return
+
+await navigator.clipboard.writeText(output.value)
+
+const copyText=document.getElementById("copyText")
+
+copyText.innerText="✓ Copied!"
+
+setTimeout(()=>{
+copyText.innerText="Copy All"
+},2000)
+
+}
+
+
+
+generateUUIDs()
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+
+
+</body>
+</html>

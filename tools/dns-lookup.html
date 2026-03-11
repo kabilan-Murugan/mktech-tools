@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>DNS Lookup Tool | MKTech Network Tools</title>
+
+<meta name="description" content="Free DNS lookup tool to check A, AAAA, MX, TXT, NS and CNAME records instantly using Google's DNS resolver.">
+<meta name="keywords" content="dns lookup, dns checker, dns records lookup, mx record checker, dns tools">
+<meta name="author" content="MKTech">
+
+<meta name="google-adsense-account" content="ca-pub-xxxxxxxxxxxx">
+
+<link rel="canonical" href="https://mktech.fun/tools/dns-lookup">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+font-family:'Fira Code',monospace;
+background:#030303;
+color:#00ff41;
+}
+
+.cyber-panel{
+border:1px solid #004400;
+background:rgba(0,10,0,0.95);
+box-shadow:0 0 30px rgba(0,255,65,0.05);
+}
+
+.input-glow:focus{
+outline:none;
+border-color:#00ff41;
+box-shadow:0 0 10px rgba(0,255,65,0.4);
+}
+
+select option{
+background:#000;
+color:#00ff41;
+}
+
+::-webkit-scrollbar{
+width:6px;
+}
+
+::-webkit-scrollbar-track{
+background:#000;
+}
+
+::-webkit-scrollbar-thumb{
+background:#004400;
+border-radius:10px;
+}
+
+.loading-bar{
+height:2px;
+background:#00ff41;
+width:0%;
+transition:width .4s ease;
+}
+
+</style>
+
+</head>
+
+
+
+<body class="text-green-400">
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+<!-- PAGE WRAPPER -->
+<div class="max-w-6xl mx-auto px-6 py-20">
+
+<div class="flex justify-center">
+
+<div class="cyber-panel rounded-lg p-8 w-full max-w-3xl relative overflow-hidden">
+
+<!-- STATUS BAR -->
+<div class="flex justify-between items-center mb-8 border-b border-green-900 pb-3">
+
+<div class="flex items-center gap-3">
+
+<span class="animate-pulse text-red-600">●</span>
+
+<h1 class="text-xs font-bold tracking-[0.3em] uppercase">
+Recon_Module: DNS_LOOKUP
+</h1>
+
+</div>
+
+<span class="text-[10px] text-green-900">
+SECURE_LINK: ENABLED
+</span>
+
+</div>
+
+
+
+<div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+
+<!-- INPUT SIDE -->
+
+<div class="md:col-span-2 space-y-5">
+
+<div>
+
+<label class="block text-[10px] text-green-800 uppercase mb-2">
+Target Domain
+</label>
+
+<input id="domain"
+type="text"
+placeholder="example.com"
+class="w-full bg-black border border-green-900 rounded p-3 text-sm input-glow text-green-400 placeholder-green-900"/>
+
+</div>
+
+
+
+<div>
+
+<label class="block text-[10px] text-green-800 uppercase mb-2">
+Record Type
+</label>
+
+<select id="recordType"
+class="w-full bg-black border border-green-900 rounded p-3 text-sm input-glow text-green-400">
+
+<option value="A">A (IPv4)</option>
+<option value="AAAA">AAAA (IPv6)</option>
+<option value="MX">MX (Mail)</option>
+<option value="TXT">TXT</option>
+<option value="NS">NS</option>
+<option value="CNAME">CNAME</option>
+
+</select>
+
+</div>
+
+
+
+<button onclick="lookupDNS()"
+class="w-full border border-green-500 text-green-500 hover:bg-green-500 hover:text-black font-bold py-3 text-xs uppercase transition">
+
+Execute Query
+
+</button>
+
+</div>
+
+
+
+<!-- RESULT TERMINAL -->
+
+<div class="md:col-span-3">
+
+<div class="flex justify-between items-center mb-2">
+
+<label class="text-[10px] text-green-800 uppercase">
+Query Buffer
+</label>
+
+<span id="load-status"
+class="text-[9px] text-green-900">
+IDLE
+</span>
+
+</div>
+
+
+
+<div class="relative bg-black border border-green-900 rounded h-64 p-4">
+
+<div id="loader"
+class="loading-bar absolute top-0 left-0">
+</div>
+
+<div id="result"
+class="h-full overflow-y-auto whitespace-pre-wrap text-xs leading-relaxed text-green-500">
+
+<span class="text-green-900 italic">
+Ready for domain ingestion...
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- FOOTER -->
+
+<div class="mt-8 text-center border-t border-green-900/30 pt-4">
+
+<p class="text-[9px] text-green-900 tracking-widest">
+MKTECH SYSTEMS © 2026 | UNRESTRICTED ACCESS
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+async function lookupDNS(){
+
+const domain=document.getElementById("domain").value
+const type=document.getElementById("recordType").value
+const resultDiv=document.getElementById("result")
+const loader=document.getElementById("loader")
+const status=document.getElementById("load-status")
+
+if(!domain){
+
+resultDiv.innerHTML="<span class='text-red-600'>[!] ERROR: TARGET_DOMAIN_NULL</span>"
+return
+
+}
+
+resultDiv.innerHTML=`<span class="text-green-700 animate-pulse">> Querying ${type} records for ${domain}...</span>`
+
+loader.style.width="40%"
+status.innerText="RUNNING"
+
+let url=`https://dns.google/resolve?name=${domain}&type=${type}`
+
+try{
+
+let response=await fetch(url)
+let data=await response.json()
+
+loader.style.width="100%"
+
+setTimeout(()=>{
+
+let output=`<span class="text-green-800">--- QUERY_SUCCESS ---</span>\n`
+
+if(data.Answer){
+
+data.Answer.forEach((record,index)=>{
+
+output+=`<span class="text-white">[${index}]</span> DATA: ${record.data} <span class="text-green-900">(TTL:${record.TTL})</span>\n`
+
+})
+
+}else{
+
+output+=`<span class="text-yellow-600">[!] NO_RECORDS_FOUND</span>\n`
+
+}
+
+resultDiv.innerHTML=output
+status.innerText="COMPLETED"
+loader.style.width="0%"
+
+},500)
+
+}catch{
+
+resultDiv.innerHTML="<span class='text-red-600'>[CRITICAL] NETWORK_TIMEOUT_FAILURE</span>"
+status.innerText="FAILED"
+loader.style.width="0%"
+
+}
+
+}
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+
+<!-- SEO STRUCTURED DATA -->
+
+<script type="application/ld+json">
+
+{
+"@context":"https://schema.org",
+"@type":"SoftwareApplication",
+"name":"DNS Lookup Tool",
+"applicationCategory":"DeveloperApplication",
+"operatingSystem":"Web",
+"description":"Free DNS lookup tool to check DNS records instantly.",
+"url":"https://mktech.fun/tools/dns-lookup",
+"creator":{
+"@type":"Organization",
+"name":"MKTech"
+}
+}
+
+</script>
+
+</body>
+</html>

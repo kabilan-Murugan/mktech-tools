@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>JSON Formatter & Converter | MKTech Tools</title>
+
+<meta name="description" content="Beautify, minify, validate and convert JSON to CSV or XML instantly with this free JSON formatter tool.">
+
+<meta name="keywords" content="json formatter, json beautify, json validator, json to csv, json to xml">
+
+<meta name="author" content="MKTech">
+
+<meta name="google-adsense-account" content="ca-pub-xxxxxxxxxxxx">
+
+<link rel="canonical" href="https://mktech.fun/tools/json-formatter">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+select option{background:#1e293b;color:white;}
+</style>
+
+</head>
+
+
+
+<body class="bg-slate-950 text-slate-200 font-sans">
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+
+<!-- PAGE WRAPPER -->
+<div class="max-w-7xl mx-auto px-6 py-24">
+
+<div class="flex justify-center">
+
+<div class="bg-slate-900 shadow-2xl rounded-3xl p-8 w-full max-w-5xl border border-slate-800 relative overflow-hidden">
+
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-emerald-600/10 blur-[100px] rounded-full"></div>
+
+<header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+
+<div>
+<h1 class="text-3xl font-extrabold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+JSON Architect
+</h1>
+
+<p class="text-slate-500 text-sm font-medium">
+Convert, Format & Validate
+</p>
+</div>
+
+<div class="flex items-center gap-2 bg-slate-800 p-1 rounded-xl border border-slate-700">
+
+<select id="tabSize"
+onchange="formatJSON()"
+class="bg-transparent text-xs font-bold uppercase px-4 py-2 outline-none cursor-pointer text-emerald-400">
+
+<option value="2">2 Spaces</option>
+<option value="4" selected>4 Spaces</option>
+<option value="tabs">Tabs</option>
+
+</select>
+
+</div>
+
+</header>
+
+
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<!-- INPUT -->
+
+<div class="space-y-2">
+
+<div class="flex justify-between items-center px-1">
+
+<span class="text-xs font-bold uppercase tracking-widest text-slate-500">
+Raw Input
+</span>
+
+<button onclick="clearAll()"
+class="text-[10px] text-slate-500 hover:text-red-400 uppercase font-bold">
+
+Clear All
+
+</button>
+
+</div>
+
+<textarea id="jsonInput"
+class="w-full bg-slate-950 border border-slate-700 rounded-2xl p-4 h-80 text-slate-300 font-mono text-sm focus:ring-2 focus:ring-emerald-500 outline-none resize-none"
+placeholder='[{"id":1,"name":"MKTech"}]'></textarea>
+
+</div>
+
+
+
+<!-- OUTPUT -->
+
+<div class="space-y-2">
+
+<div class="flex justify-between items-center px-1">
+
+<span id="statusLabel"
+class="text-xs font-bold uppercase tracking-widest text-slate-500">
+
+Output Result
+
+</span>
+
+<button id="copyBtn"
+onclick="copyResult()"
+class="text-xs text-emerald-400 hover:text-emerald-300 font-bold">
+
+Copy Result
+
+</button>
+
+</div>
+
+<div class="relative h-80 bg-slate-800/50 border border-slate-700 rounded-2xl overflow-hidden">
+
+<textarea id="jsonOutput"
+readonly
+class="w-full h-full bg-transparent p-4 text-emerald-400 font-mono text-sm outline-none resize-none"
+placeholder="Result will appear here..."></textarea>
+
+<div id="errorBox"
+class="hidden absolute bottom-0 left-0 right-0 bg-red-500/90 text-white text-[10px] p-2 font-mono">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<footer class="mt-8 pt-6 border-t border-slate-800/50 flex flex-wrap justify-between items-center gap-4">
+
+<div class="flex flex-wrap gap-2">
+
+<button onclick="formatJSON()"
+class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold text-xs">
+
+Beautify
+
+</button>
+
+<button onclick="minifyJSON()"
+class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-bold text-xs">
+
+Minify
+
+</button>
+
+<div class="w-px h-8 bg-slate-700"></div>
+
+<button onclick="convertToCSV()"
+class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-bold text-xs">
+
+To CSV
+
+</button>
+
+<button onclick="convertToXML()"
+class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg font-bold text-xs">
+
+To XML
+
+</button>
+
+</div>
+
+
+<div class="text-[10px] text-slate-500 font-mono flex gap-4 uppercase">
+
+<span id="sizeInfo">Size: 0 B</span>
+
+<span id="lineInfo">Lines: 0</span>
+
+</div>
+
+</footer>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+const input=document.getElementById('jsonInput')
+const output=document.getElementById('jsonOutput')
+const errorBox=document.getElementById('errorBox')
+const statusLabel=document.getElementById('statusLabel')
+
+function getParsed(){
+try{
+return JSON.parse(input.value)
+}catch(e){
+showError(e.message)
+return null
+}
+}
+
+function formatJSON(){
+
+const parsed=getParsed()
+
+if(!parsed) return
+
+const tabSize=document.getElementById('tabSize').value
+
+const indent=tabSize==="tabs"?"\t":parseInt(tabSize)
+
+output.value=JSON.stringify(parsed,null,indent)
+
+updateUI("JSON Formatted")
+
+}
+
+function minifyJSON(){
+
+const parsed=getParsed()
+
+if(!parsed) return
+
+output.value=JSON.stringify(parsed)
+
+updateUI("JSON Minified")
+
+}
+
+function convertToCSV(){
+
+const parsed=getParsed()
+
+if(!parsed) return
+
+const array=Array.isArray(parsed)?parsed:[parsed]
+
+const headers=Object.keys(array[0])
+
+const csvRows=[
+headers.join(','),
+...array.map(row=>headers.map(f=>JSON.stringify(row[f]||'')).join(','))
+]
+
+output.value=csvRows.join('\n')
+
+updateUI("Converted to CSV")
+
+}
+
+function convertToXML(){
+
+const parsed=getParsed()
+
+if(!parsed) return
+
+function toXml(obj){
+
+let xml=""
+
+if(Array.isArray(obj)){
+obj.forEach(i=>xml+=`<item>${toXml(i)}</item>`)
+}
+else if(typeof obj==="object"){
+for(let k in obj) xml+=`<${k}>${toXml(obj[k])}</${k}>`
+}
+else{
+xml+=obj
+}
+
+return xml
+
+}
+
+output.value=`<?xml version="1.0"?>\n<root>\n${toXml(parsed)}\n</root>`
+
+updateUI("Converted to XML")
+
+}
+
+function showError(msg){
+
+errorBox.innerText=`⚠ ${msg}`
+
+errorBox.classList.remove("hidden")
+
+statusLabel.innerText="Error"
+
+statusLabel.classList.add("text-red-400")
+
+output.value=""
+
+}
+
+function updateUI(status){
+
+errorBox.classList.add("hidden")
+
+statusLabel.innerText=status
+
+statusLabel.classList.remove("text-red-400")
+
+statusLabel.classList.add("text-emerald-400")
+
+const bytes=new Blob([output.value]).size
+
+const lines=output.value.split("\n").length
+
+document.getElementById("sizeInfo").innerText=`Size: ${bytes} B`
+
+document.getElementById("lineInfo").innerText=`Lines: ${lines}`
+
+}
+
+function clearAll(){
+
+input.value=""
+
+output.value=""
+
+errorBox.classList.add("hidden")
+
+statusLabel.innerText="Output Result"
+
+}
+
+async function copyResult(){
+
+if(!output.value) return
+
+await navigator.clipboard.writeText(output.value)
+
+const btn=document.getElementById("copyBtn")
+
+btn.innerText="✓ Copied"
+
+setTimeout(()=>btn.innerText="Copy Result",2000)
+
+}
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+
+
+<script type="application/ld+json">
+
+{
+"@context":"https://schema.org",
+"@type":"SoftwareApplication",
+"name":"JSON Formatter Tool",
+"applicationCategory":"DeveloperApplication",
+"operatingSystem":"Web",
+"description":"Beautify, validate and convert JSON online.",
+"url":"https://mktech.fun/tools/json-formatter",
+"creator":{
+"@type":"Organization",
+"name":"MKTech"
+}
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,301 @@
+```html
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MKTech Ops Center | Developer, Network & SysAdmin Tools</title>
+
+<meta name="description" content="MKTech provides powerful online tools for developers, network engineers and system administrators including DNS lookup, port checker, SSL checker and automation scripts.">
+
+<meta name="keywords" content="developer tools, sysadmin tools, network tools, dns lookup, port checker, json formatter, base64 tool">
+
+<meta name="robots" content="index, follow">
+
+<link rel="canonical" href="https://mktech.fun/">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX"
+crossorigin="anonymous"></script>
+
+<style>
+
+body{
+font-family:'Plus Jakarta Sans',sans-serif;
+background:#030712;
+color:#94a3b8;
+}
+
+.glass{
+background:rgba(17,24,39,.7);
+border:1px solid rgba(255,255,255,.05);
+backdrop-filter:blur(16px);
+}
+
+.hero-gradient{
+background:radial-gradient(circle at 50% 50%,#1e293b 0%,#030712 100%);
+}
+
+.tool-card{
+transition:.3s;
+border:1px solid rgba(255,255,255,.05);
+}
+
+.tool-card:hover{
+transform:translateY(-4px);
+border-color:#f97316;
+background:rgba(249,115,22,.05);
+}
+
+.terminal{
+font-family:'Fira Code',monospace;
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+
+<!-- HEADER -->
+
+<header class="sticky top-0 z-50 glass border-b border-white/5">
+
+<div class="max-w-[1600px] mx-auto flex items-center justify-between px-8 py-4">
+
+<div class="flex items-center gap-3">
+
+<div class="bg-orange-600 text-white font-black px-2 py-1 rounded">
+MK
+</div>
+
+<h1 class="text-white font-black">
+MK<span class="text-orange-500">Tech</span>
+</h1>
+
+</div>
+
+<input id="search"
+placeholder="Search tools..."
+class="bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-sm w-60 focus:outline-none">
+
+</div>
+
+</header>
+
+
+
+<!-- HERO -->
+
+<section class="hero-gradient py-24 text-center">
+
+<h2 class="text-6xl font-black text-white mb-6">
+MK<span class="text-orange-500">Tech</span> Ops Center
+</h2>
+
+<p class="text-gray-400 text-lg max-w-2xl mx-auto">
+Developer utilities, network diagnostics and sysadmin automation tools.
+</p>
+
+<div class="terminal text-green-400 mt-6 text-sm" id="boot">
+Initializing MKTech Node...
+</div>
+
+</section>
+
+
+
+<!-- AD SLOT -->
+
+<div class="max-w-6xl mx-auto my-10 text-center text-gray-500 text-xs border border-dashed border-gray-700 p-6">
+Google Ad Slot
+</div>
+
+
+
+<main class="max-w-[1600px] mx-auto px-8 py-16 space-y-24" id="toolsContainer">
+
+
+
+<!-- DEVELOPER TOOLS -->
+
+<section>
+
+<h3 class="text-2xl font-black text-white mb-8">
+Developer Tools
+</h3>
+
+<div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+<a href="/tools/password-generator.html" class="tool-card glass p-6 rounded-xl">Password Generator</a>
+
+<a href="/tools/qr-code-generator.html" class="tool-card glass p-6 rounded-xl">QR Code Generator</a>
+
+<a href="/tools/json-formatter.html" class="tool-card glass p-6 rounded-xl">JSON Formatter</a>
+
+<a href="/tools/base64-tool.html" class="tool-card glass p-6 rounded-xl">Base64 Tool</a>
+
+<a href="/tools/uuid-generator.html" class="tool-card glass p-6 rounded-xl">UUID Generator</a>
+
+<a href="/tools/url-encoder-decoder.html" class="tool-card glass p-6 rounded-xl">URL Encoder / Decoder</a>
+
+<a href="/tools/text-case-converter.html" class="tool-card glass p-6 rounded-xl">Text Case Converter</a>
+
+<a href="/tools/random-string-generator.html" class="tool-card glass p-6 rounded-xl">Random String Generator</a>
+
+</div>
+
+</section>
+
+
+
+<!-- NETWORK TOOLS -->
+
+<section>
+
+<h3 class="text-2xl font-black text-white mb-8">
+Network Stack
+</h3>
+
+<div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+<a href="/tools/dns-lookup.html" class="tool-card glass p-6 rounded-xl">DNS Lookup</a>
+
+<a href="/tools/port-checker.html" class="tool-card glass p-6 rounded-xl">Port Checker</a>
+
+<a href="/tools/ping-test.html" class="tool-card glass p-6 rounded-xl">Ping Test</a>
+
+<a href="/tools/http-header-checker.html" class="tool-card glass p-6 rounded-xl">HTTP Header Checker</a>
+
+<a href="/tools/whois-checker.html" class="tool-card glass p-6 rounded-xl">WHOIS Checker</a>
+
+<a href="/tools/domain-age-checker.html" class="tool-card glass p-6 rounded-xl">Domain Age Checker</a>
+
+<a href="/tools/ssl-checker.html" class="tool-card glass p-6 rounded-xl">SSL Checker</a>
+
+<a href="/tools/subdomain-finder.html" class="tool-card glass p-6 rounded-xl">Subdomain Finder</a>
+
+<a href="/tools/ip-location.html" class="tool-card glass p-6 rounded-xl">IP Location</a>
+
+<a href="/tools/ip-checker.html" class="tool-card glass p-6 rounded-xl">IP Checker</a>
+
+</div>
+
+</section>
+
+
+
+<!-- SYSADMIN -->
+
+<section>
+
+<h3 class="text-2xl font-black text-white mb-8">
+SysAdmin Core
+</h3>
+
+<div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+<a href="/sysadmin/windows-commands.html" class="tool-card glass p-6 rounded-xl">
+Windows Commands
+</a>
+
+<a href="/sysadmin/network-troubleshooting-guide.html" class="tool-card glass p-6 rounded-xl">
+Network Troubleshooting
+</a>
+
+<a href="/sysadmin/router-reset-guide.html" class="tool-card glass p-6 rounded-xl">
+Router Reset Guide
+</a>
+
+<a href="/sysadmin/windows-activation-troubleshoot.html" class="tool-card glass p-6 rounded-xl">
+Windows Activation
+</a>
+
+<a href="/sysadmin/powershell-scripts.html" class="tool-card glass p-6 rounded-xl">
+PowerShell Scripts
+</a>
+
+</div>
+
+</section>
+
+
+
+</main>
+
+
+
+<footer class="border-t border-white/5 py-10 text-center text-gray-500 text-sm">
+© 2026 MKTech Systems
+</footer>
+
+
+
+<script>
+
+const searchInput=document.getElementById("search")
+
+searchInput.addEventListener("keyup",function(){
+
+const filter=searchInput.value.toLowerCase()
+
+const cards=document.querySelectorAll(".tool-card")
+
+cards.forEach(card=>{
+
+if(card.textContent.toLowerCase().includes(filter)){
+card.style.display="block"
+}else{
+card.style.display="none"
+}
+
+})
+
+})
+
+
+
+const bootText=[
+"Loading modules...",
+"Connecting Dev Terminal...",
+"Connecting Network Stack...",
+"Mounting SysAdmin Core...",
+"MKTech Node Active ✔"
+]
+
+let i=0
+
+function boot(){
+
+if(i<bootText.length){
+
+document.getElementById("boot").innerText=bootText[i]
+
+i++
+
+setTimeout(boot,900)
+
+}
+
+}
+
+boot()
+
+</script>
+
+
+
+</body>
+</html>
+```

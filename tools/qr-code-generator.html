@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>QR Generator | MKTech Tools</title>
+
+<meta name="description" content="Generate high quality QR codes with logo support and custom resolution using MKTech QR Studio.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+</head>
+
+
+
+<body class="bg-slate-900 text-slate-200">
+
+<!-- HEADER -->
+<div id="header"></div>
+
+
+
+<!-- PAGE WRAPPER -->
+<div class="max-w-6xl mx-auto px-6 py-24 flex justify-center">
+
+<div class="bg-slate-800 shadow-2xl rounded-2xl p-8 w-full max-w-2xl border border-slate-700 flex flex-col md:flex-row gap-8">
+
+
+<!-- LEFT PANEL -->
+
+<div class="flex-1 space-y-6">
+
+<header>
+<h1 class="text-3xl font-extrabold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+QR Studio
+</h1>
+
+<p class="text-slate-400 text-sm">
+Professional Grade QR Generation
+</p>
+</header>
+
+
+
+<div>
+<label class="block text-xs font-semibold uppercase text-slate-500 mb-2">
+Content URL or Text
+</label>
+
+<input id="qrText"
+type="text"
+placeholder="https://mktech.fun"
+class="w-full bg-slate-900 border border-slate-600 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-emerald-500 outline-none">
+</div>
+
+
+
+<div class="grid grid-cols-2 gap-4">
+
+<div>
+
+<label class="block text-xs font-semibold uppercase text-slate-500 mb-2">
+Resolution
+</label>
+
+<select id="qrSize"
+class="w-full bg-slate-900 border border-slate-600 rounded-xl px-3 py-2">
+
+<option value="128">128 x 128</option>
+<option value="256" selected>256 x 256</option>
+<option value="512">512 x 512</option>
+<option value="1024">1024 x 1024</option>
+
+</select>
+
+</div>
+
+
+
+<div>
+
+<label class="block text-xs font-semibold uppercase text-slate-500 mb-2">
+Center Logo
+</label>
+
+<input type="file" id="logoInput" accept="image/*" class="hidden">
+
+<button onclick="document.getElementById('logoInput').click()"
+class="w-full bg-slate-700 hover:bg-slate-600 py-2 rounded-xl text-sm border border-dashed border-slate-500">
+
+Upload Image
+
+</button>
+
+</div>
+
+</div>
+
+
+
+<div class="flex gap-3 pt-4">
+
+<button onclick="generateQR()"
+class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl">
+
+Generate
+
+</button>
+
+<button onclick="downloadQR()"
+class="px-6 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl">
+
+↓
+
+</button>
+
+</div>
+
+</div>
+
+
+
+<!-- RIGHT PANEL -->
+
+<div class="w-full md:w-64 flex flex-col items-center justify-center bg-slate-900 rounded-2xl p-4 border border-slate-700 relative min-h-[250px]">
+
+<div id="qrcode" class="bg-white p-2 rounded-lg shadow-inner"></div>
+
+<canvas id="finalCanvas" class="hidden"></canvas>
+
+<p class="text-[10px] text-slate-500 mt-4 uppercase tracking-widest">
+Live Preview
+</p>
+
+</div>
+
+
+
+</div>
+</div>
+
+
+
+<script>
+
+let logoImage=null
+
+
+
+document.getElementById("logoInput").addEventListener("change",function(e){
+
+const reader=new FileReader()
+
+reader.onload=function(event){
+
+const img=new Image()
+
+img.onload=()=>{logoImage=img;generateQR()}
+
+img.src=event.target.result
+
+}
+
+reader.readAsDataURL(e.target.files[0])
+
+})
+
+
+
+function generateQR(){
+
+const text=document.getElementById("qrText").value||"MKTech"
+
+const size=parseInt(document.getElementById("qrSize").value)
+
+const container=document.getElementById("qrcode")
+
+container.innerHTML=""
+
+
+
+const qrcode=new QRCode(container,{
+text:text,
+width:size,
+height:size,
+colorDark:"#000000",
+colorLight:"#ffffff",
+correctLevel:QRCode.CorrectLevel.H
+})
+
+
+
+setTimeout(()=>{
+if(logoImage) applyLogo(size)
+},100)
+
+}
+
+
+
+function applyLogo(size){
+
+const qrImg=document.querySelector("#qrcode img")
+
+const canvas=document.getElementById("finalCanvas")
+
+const ctx=canvas.getContext("2d")
+
+canvas.width=size
+canvas.height=size
+
+ctx.drawImage(qrImg,0,0,size,size)
+
+const logoSize=size*0.2
+const pos=(size-logoSize)/2
+
+ctx.fillStyle="white"
+ctx.fillRect(pos-2,pos-2,logoSize+4,logoSize+4)
+
+ctx.drawImage(logoImage,pos,pos,logoSize,logoSize)
+
+qrImg.src=canvas.toDataURL()
+
+}
+
+
+
+function downloadQR(){
+
+const qrImg=document.querySelector("#qrcode img")
+
+if(!qrImg) return alert("Generate a QR code first!")
+
+const link=document.createElement("a")
+
+link.href=qrImg.src
+link.download=`QR_MKTech_${Date.now()}.png`
+
+link.click()
+
+}
+
+
+
+generateQR()
+
+</script>
+
+
+
+<script src="/js/include.js"></script>
+
+<script>
+loadComponent("header","/components/header.html")
+</script>
+
+</body>
+</html>
